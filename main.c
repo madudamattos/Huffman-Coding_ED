@@ -1,11 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "arvore.h"
  
 #define TAM_NOME_CAMINHO 100
 #define TAM_VETOR 128
 
-void contaCaracteres(FILE* arquivo, int* V);
+int contaCaracteres(FILE* arquivo, int* V);
 void imprimeVetorFrequencia(int* V);
 
 int main(int argc, char *argv[]){
@@ -34,14 +35,21 @@ int main(int argc, char *argv[]){
         V[i] = 0;
     }
 
-    contaCaracteres(arquivo, V);
+    int qtd = contaCaracteres(arquivo, V);
 
     imprimeVetorFrequencia(V);
+
+    Arv** folhas = iniciaFolhas(V, TAM_VETOR, qtd);
+    
+    ordenaFrequenciaNos(folhas, qtd);
+
+    imprimeVetorFolhas(folhas, qtd);
 
     return 0;
 }
 
-void contaCaracteres(FILE* arquivo, int* V){
+//retorna a quantidade de caracteres presentes no vetor
+int contaCaracteres(FILE* arquivo, int* V){
     char c = '\0';
     int d = 0;
 
@@ -51,6 +59,18 @@ void contaCaracteres(FILE* arquivo, int* V){
         d = (int)c;
         V[d]++;
     }
+
+    int qtd;
+
+    for(int i=0; i<TAM_VETOR;i++)
+    {
+        if(V[i] != 0)
+        {
+            qtd++;
+        }
+    }
+
+    return qtd;
 }
 
 void imprimeVetorFrequencia(int* V){
@@ -62,4 +82,6 @@ void imprimeVetorFrequencia(int* V){
             printf("%c: %d\n", i, V[i]);
         }
     }
+
+    printf("\n");
 }
