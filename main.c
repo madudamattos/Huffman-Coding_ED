@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "arvore.h"
+#include "lista.h"
  
 #define TAM_NOME_CAMINHO 100
 #define TAM_VETOR 128
@@ -39,11 +40,9 @@ int main(int argc, char *argv[]){
 
     imprimeVetorFrequencia(V);
 
-    Arv** folhas = iniciaFolhas(V, TAM_VETOR, qtd);
+    Lista* l = iniciaFolhas(V, TAM_VETOR, qtd);
     
-    ordenaFrequenciaNos(folhas, qtd);
-
-    imprimeVetorFolhas(folhas, qtd);
+    imprimeLista(l, imprimeNo);
 
     return 0;
 }

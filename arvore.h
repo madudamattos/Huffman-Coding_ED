@@ -3,10 +3,11 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "lista.h"
 
 typedef struct arvore Arv;
 
-Arv** iniciaFolhas(int V[], int tam, int qtd);
+Lista* iniciaFolhas(int V[], int tam, int qtd);
 
 Arv* arv_cria_folha(char caracter, int frequencia);
 
@@ -16,5 +17,12 @@ void ordenaFrequenciaNos(Arv** nos, int qtd);
 
 void imprimeVetorFolhas(Arv** folhas, int qtd);
 
+void imprimeNo(void* ptr);
+
+char retornaCaracterArvore(Arv* a);
+
+int retornaPesoArvore(Arv* a);
+
+int retornaTipoArvore(Arv* a);
 
 #endif

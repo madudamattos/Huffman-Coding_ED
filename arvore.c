@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "arvore.h"
+#include "lista.h"
 
 typedef enum{
     FOLHA = 0,
@@ -9,7 +10,7 @@ typedef enum{
 
 struct arvore{
     char caracter;
-    int frequencia;
+    int peso;
     int tipo;
     Arv* esq;
     Arv* dir;
@@ -17,11 +18,10 @@ struct arvore{
 
 
 //recebe o vetor com a frequencia dos caracteres, o tamanho máximo desse vetor e quantidade de caracteres com frequencia diferente de zero que serao convertidos em folhas
-Arv** iniciaFolhas(int V[], int tam, int qtd)
+Lista* iniciaFolhas(int V[], int tam, int qtd)
 {
     //vetor que vai armazenar todas as folhas iniciais
-    Arv** folhas = calloc(qtd, sizeof(Arv*));
-    int j=0;
+    Lista* lista = criaLista();
     char c;
 
     for(int i=0; i<tam; i++)
@@ -29,12 +29,12 @@ Arv** iniciaFolhas(int V[], int tam, int qtd)
         if(V[i] != 0)
         {   
             c = (char)i;
-            folhas[j] = arv_cria_folha(c, V[i]);
-            j++;
+            Arv* a = arv_cria_folha(c, V[i]);
+            insereLista(lista, a, V[i]);
         }
     }
 
-    return folhas;
+    return lista;
 }
 
 Arv* arv_cria_folha(char caracter, int frequencia)
@@ -42,7 +42,7 @@ Arv* arv_cria_folha(char caracter, int frequencia)
     Arv* folha = calloc(1, sizeof(Arv));
 
     folha->caracter = caracter;
-    folha->frequencia = frequencia;
+    folha->peso = frequencia;
     folha->tipo = FOLHA;
 
     folha->esq = NULL;
@@ -59,16 +59,16 @@ Arv* arv_cria_no(Arv* e, Arv* d){
     a->tipo = NO;
 
 
-    //a frequencia do nó vai ser a soma da frequência dos nós inferiores esquerdo e direito
-    a->frequencia = 0;
+    //o peso do nó vai ser a soma do peso dos nós inferiores esquerdo e direito
+    a->peso = 0;
     if(e != NULL)
     {
-        a->frequencia += e->frequencia; 
+        a->peso += e->peso; 
     }
 
     if(d != NULL)
     {
-        a->frequencia += d->frequencia; 
+        a->peso += d->peso; 
     }
 
     a->esq = e;
@@ -77,47 +77,19 @@ Arv* arv_cria_no(Arv* e, Arv* d){
     return a;
 }
 
-
-//essas funções abaixo tem a função de fazer a primeira ordenação do vetor de folhas por frequencia em ordem crescente 
-void troca(Arv** nos, int i, int j) {
-    Arv* temp = nos[i];
-    nos[i] = nos[j];
-    nos[j] = temp;
+void imprimeNo(void* ptr){
+    Arv* a = (Arv*)ptr;
+    printf("%d %c %d", a->tipo, a->caracter, a->peso);
 }
 
-int particiona(Arv** nos, int inicio, int fim) {
-    int pivot = nos[fim]->frequencia;
-    int i = inicio - 1;
-
-    for (int j = inicio; j < fim; j++) {
-        if (nos[j]->frequencia < pivot) {
-            i++;
-            troca(nos, i, j);
-        }
-    }
-
-    troca(nos, i + 1, fim);
-    return i + 1;
+char retornaCaracterArvore(Arv* a){
+    return a->caracter;
 }
 
-void quickSort(Arv** nos, int inicio, int fim) {
-    if (inicio < fim) {
-        int pi = particiona(nos, inicio, fim);
-        quickSort(nos, inicio, pi - 1);
-        quickSort(nos, pi + 1, fim);
-    }
+int retornaPesoArvore(Arv* a){
+    return a->peso;
 }
 
-void ordenaFrequenciaNos(Arv** nos, int qtd) {
-    quickSort(nos, 0, qtd - 1);
-}
-
-//--------------------------------------------
-
-void imprimeVetorFolhas(Arv** folhas, int qtd)
-{
-    for(int i=0; i<qtd; i++)
-    {
-        printf("%c: %d\n", folhas[i]->caracter, folhas[i]->frequencia);
-    }
+int retornaTipoArvore(Arv* a){
+    return a->tipo;
 }
