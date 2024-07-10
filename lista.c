@@ -46,7 +46,7 @@ void insereLista(Lista* l, void* a, int peso){
         l->ult = novaCelula;
     } else {
         Celula* atual = l->prim;
-        while (atual != NULL && atual->peso < peso) {
+        while (atual != NULL && atual->peso <= peso) {
             atual = atual->prox;
         }
 
