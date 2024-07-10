@@ -16,7 +16,7 @@ Lista* criaLista();
 
 void insereLista(Lista* l, void* a, int peso);
 
-void retiraLista(Lista* l, void* conteudo);
+void* retiraLista(Lista* l);
 
 void imprimeLista(Lista* l, FuncaoImprime imprimeElemento);
 

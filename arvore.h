@@ -25,4 +25,8 @@ int retornaPesoArvore(Arv* a);
 
 int retornaTipoArvore(Arv* a);
 
+Arv* organizaArvore(Lista* l);
+
+void imprimeArvore(Arv* a);
+
 #endif

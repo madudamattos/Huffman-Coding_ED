@@ -93,3 +93,31 @@ int retornaPesoArvore(Arv* a){
 int retornaTipoArvore(Arv* a){
     return a->tipo;
 }
+
+Arv* organizaArvore(Lista* l){
+    while(!ehUnitariaLista(l)){
+        Arv* e = (Arv*) retiraLista(l);
+        Arv* d = (Arv*) retiraLista(l);
+        Arv* a = arv_cria_no(e, d);
+        insereLista(l, a, a->peso);
+    }
+
+    Arv* arvore = (Arv*) retiraLista(l);
+
+    return arvore;
+}
+
+void imprimeArvore(Arv* a){
+        if(!a){
+        return;
+    }
+    if(a->tipo ==  1){
+        printf("<%d", a->peso);
+    } else{
+        printf("<%c", a->caracter);
+    }
+
+    imprimeArvore(a->esq);
+    imprimeArvore(a->dir);
+    printf(">");
+}

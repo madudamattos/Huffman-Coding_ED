@@ -71,38 +71,28 @@ void insereLista(Lista* l, void* a, int peso){
     l->TAM++;
 }
 
-void retiraLista(Lista* l, void* conteudo){
+void* retiraLista(Lista* l){
     if (l->prim == NULL) {
-        fprintf(stderr, "Erro: lista vazia, não é possível retirar elementos.\n");
-        exit(EXIT_FAILURE);
+        printf("Lista vazia!\n");
+        return NULL;
     }
 
     Celula* atual = l->prim;
-    while (atual != NULL && atual->conteudo != conteudo) {
-        atual = atual->prox;
-    }
+    void* elemento = atual->conteudo;
 
-    if (atual == NULL) {
-        fprintf(stderr, "Erro: elemento não encontrado na lista.\n");
-        return;
-    }
+    l->prim = l->prim->prox;
 
-    if (atual->ant == NULL && atual->prox == NULL) { // Único elemento na lista
-        l->prim = NULL;
+    if(!l->prim){
         l->ult = NULL;
-    } else if (atual->ant == NULL) { // Remover o primeiro elemento
-        l->prim = atual->prox;
+    } else {
         l->prim->ant = NULL;
-    } else if (atual->prox == NULL) { // Remover o último elemento
-        l->ult = atual->ant;
-        l->ult->prox = NULL;
-    } else { // Remover elemento do meio da lista
-        atual->ant->prox = atual->prox;
-        atual->prox->ant = atual->ant;
     }
-
+    
     free(atual);
+
     l->TAM--;
+
+    return elemento;
 }
 
 void imprimeLista(Lista* l, FuncaoImprime imprimeElemento) {

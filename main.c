@@ -44,6 +44,10 @@ int main(int argc, char *argv[]){
     
     imprimeLista(l, imprimeNo);
 
+    Arv* a = organizaArvore(l);
+
+    imprimeArvore(a);
+
     return 0;
 }
 
