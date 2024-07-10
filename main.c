@@ -55,11 +55,9 @@ int main(int argc, char *argv[]){
 int contaCaracteres(FILE* arquivo, int* V){
     char c = '\0';
     int d = 0;
-
-    while(!feof(arquivo))
-    {
-        fscanf(arquivo, "%c", &c);
-        d = (int)c;
+    
+    while (fscanf(arquivo, "%c", &c) == 1) {
+        int d = (int)c;
         V[d]++;
     }
 
