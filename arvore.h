@@ -29,4 +29,10 @@ Arv* organizaArvore(Lista* l);
 
 void imprimeArvore(Arv* a);
 
+void escreveCabecalho(Arv *a, FILE *arquivo);
+
+Arv *leCabecalho(Arv *a, FILE *arquivo);
+
+void compactaArquivo(Arv *a, FILE *arquivo);
+
 #endif
