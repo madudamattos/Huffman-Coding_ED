@@ -48,6 +48,14 @@ int main(int argc, char *argv[]){
 
     imprimeArvore(a);
 
+    compactaArquivo(a, arquivo);
+
+    FILE *compactado = fopen("compactado.bin", "rb");
+
+    Arv *a2 = leCabecalho(a2, compactado);
+
+    imprimeArvore(a2);
+
     return 0;
 }
 
