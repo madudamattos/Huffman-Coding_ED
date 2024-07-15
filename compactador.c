@@ -8,5 +8,12 @@ void compactaArquivo(Arv *a, FILE *arquivo)
     int fim = -1;
     fwrite(&fim, sizeof(int), 1, compactado);
 
+    bitmap *tabela[256];
+    bitmap *bm = bitmapInit(8);
+
+    criaTabela(tabela, bm, a);
+
+    bitmap *texto[100000000];
+
     fclose(compactado);
 }

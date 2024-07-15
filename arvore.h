@@ -36,6 +36,6 @@ Arv *leCabecalho(Arv *a, FILE *arquivo);
 
 void compactaArquivo(Arv *a, FILE *arquivo);
 
-bitmap *criaTabela(bitmap **tabela, bitmap *bm, Arv *a);
+void criaTabela(bitmap **tabela, bitmap *bm, Arv *a);
 
 #endif

@@ -62,13 +62,13 @@ int main(int argc, char *argv[])
     imprimeArvore(a2);
 
     bitmap *tabela[256];
-    bitmap *bm = bitmapInit(900);
+    bitmap *bm = bitmapInit(8);
 
     criaTabela(tabela, bm, a2);
 
     int i;
 
-    printf("B ");
+    printf("\nB ");
     for (i = 0; i < bitmapGetLength(tabela['b']); i++)
     {
         printf("%d", bitmapGetBit(tabela['b'], i));
@@ -100,6 +100,13 @@ int main(int argc, char *argv[])
     for (i = 0; i < bitmapGetLength(tabela['s']); i++)
     {
         printf("%d", bitmapGetBit(tabela['s'], i));
+    }
+    printf("\n");
+
+    printf("ESPAÇO ");
+    for (i = 0; i < bitmapGetLength(tabela[' ']); i++)
+    {
+        printf("%d", bitmapGetBit(tabela[' '], i));
     }
     printf("\n");
 

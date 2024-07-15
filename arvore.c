@@ -163,8 +163,6 @@ Arv *leCabecalho(Arv *a, FILE *arquivo)
 
     fread(&nulo, sizeof(int), 1, arquivo);
 
-    printf("nulo: %d\n", nulo);
-
     if (nulo == -1)
         return a;
     else if (!nulo)
@@ -193,44 +191,59 @@ Arv *leCabecalho(Arv *a, FILE *arquivo)
     return a;
 }
 
-bitmap *criaTabela(bitmap **tabela, bitmap *bm, Arv *a)
+void criaTabela(bitmap **tabela, bitmap *bm, Arv *a)
 {
     if (!a)
-    {
-        return NULL;
-    }
+        return;
 
+    // se encontrar caractere (folha), escreve codigo ate o momento no indice adequado
     if (a->tipo == FOLHA)
     {
-        printf("%c\n", a->caracter);
-        bitmap *codigo = bitmapInit(900);
+        bitmap *codigo = bitmapInit(8);
 
         for (int i = 0; i < bitmapGetLength(bm); i++)
             bitmapAppendLeastSignificantBit(codigo, bitmapGetBit(bm, i));
 
         tabela[a->caracter] = codigo;
 
-        bitmapLibera(bm);
-
-        bm = bitmapInit(900);
-
-        for (int i = 0; i < bitmapGetLength(codigo) - 1; i++)
-            bitmapAppendLeastSignificantBit(bm, bitmapGetBit(codigo, i));
-
-        return bm;
+        return;
     }
 
+    // entra na esquerda, insere 0 no bitmap apos encerrar recursao remove o ultimo bit
     if (a->esq)
     {
         bitmapAppendLeastSignificantBit(bm, 0);
         criaTabela(tabela, bm, a->esq);
+
+        // cria novo e copia bm dentro dele
+        bitmap *novo = bitmapInit(8);
+        for (int i = 0; i < bitmapGetLength(bm) - 1; i++)
+            bitmapAppendLeastSignificantBit(novo, bitmapGetBit(bm, i));
+
+        // limpa bm e copia de volta tirando o ulitmo elemento
+        bitmapLibera(bm);
+        bm = bitmapInit(8);
+        for (int i = 0; i < bitmapGetLength(novo); i++)
+            bitmapAppendLeastSignificantBit(bm, bitmapGetBit(novo, i));
     }
 
+    // entra na direito, insere 1 no bitmap apos encerrar recursao remove o ultimo bit
     if (a->dir)
     {
         bitmapAppendLeastSignificantBit(bm, 1);
         criaTabela(tabela, bm, a->dir);
+
+        // cria novo e copia bm dentro dele
+        bitmap *novo = bitmapInit(8);
+        for (int i = 0; i < bitmapGetLength(bm) - 1; i++)
+            bitmapAppendLeastSignificantBit(novo, bitmapGetBit(bm, i));
+
+        // limpa bm e copia de volta tirando o ulitmo elemento
+        bitmapLibera(bm);
+        bm = bitmapInit(8);
+        for (int i = 0; i < bitmapGetLength(novo); i++)
+            bitmapAppendLeastSignificantBit(bm, bitmapGetBit(novo, i));
     }
 
-        return bm;
+    return;
 }
