@@ -122,7 +122,7 @@ void imprimeArvore(Arv* a){
     printf(">");
 }
 
-void escreveCabeçalho(Arv *a, FILE *arquivo){
+void escreveCabecalho(Arv *a, FILE *arquivo){
     if (!a){
         int nulo = 1;
         fwrite(&nulo, sizeof(int), 1, arquivo);
@@ -137,11 +137,11 @@ void escreveCabeçalho(Arv *a, FILE *arquivo){
             fwrite(&a->caracter, sizeof(char), 1, arquivo);
     }
 
-    escreveCabeçalho(a->esq, arquivo);
-    escreveCabeçalho(a->dir, arquivo);
+    escreveCabecalho(a->esq, arquivo);
+    escreveCabecalho(a->dir, arquivo);
 }
 
-Arv *leCabeçalho(Arv *a, FILE *arquivo){
+Arv *leCabecalho(Arv *a, FILE *arquivo){
     int nulo;
 
     fread(&nulo, sizeof(int), 1, arquivo);
@@ -165,8 +165,8 @@ Arv *leCabeçalho(Arv *a, FILE *arquivo){
             a->tipo = NO;
         }
 
-        a->esq = leCabeçalho(a->esq, arquivo);
-        a->dir = leCabeçalho(a->dir, arquivo);
+        a->esq = leCabecalho(a->esq, arquivo);
+        a->dir = leCabecalho(a->dir, arquivo);
     }
 
     return a;
@@ -174,7 +174,7 @@ Arv *leCabeçalho(Arv *a, FILE *arquivo){
 
 void compactaArquivo(Arv *a, FILE *arquivo){
     FILE *compactado = fopen("compactado.bin", "wb");
-    escreveCabeçalho(a, compactado);
+    escreveCabecalho(a, compactado);
 
     int fim = -1;
     fwrite(&fim, sizeof(int), 1, compactado);
