@@ -121,3 +121,63 @@ void imprimeArvore(Arv* a){
     imprimeArvore(a->dir);
     printf(">");
 }
+
+void escreveCabeçalho(Arv *a, FILE *arquivo){
+    if (!a){
+        int nulo = 1;
+        fwrite(&nulo, sizeof(int), 1, arquivo);
+        return;
+    } else{
+        int valido = 0;
+        fwrite(&valido, sizeof(int), 1, arquivo);
+        fwrite(&a->tipo, sizeof(int), 1, arquivo);
+        fwrite(&a->peso, sizeof(int), 1, arquivo);
+
+        if (a->tipo == 0)
+            fwrite(&a->caracter, sizeof(char), 1, arquivo);
+    }
+
+    escreveCabeçalho(a->esq, arquivo);
+    escreveCabeçalho(a->dir, arquivo);
+}
+
+Arv *leCabeçalho(Arv *a, FILE *arquivo){
+    int nulo;
+
+    fread(&nulo, sizeof(int), 1, arquivo);
+
+    printf("nulo: %d\n", nulo);
+
+    if (nulo == -1)
+        return a;
+    else if (!nulo){
+        int tipo, peso;
+        char caracter;
+
+        fread(&tipo, sizeof(int), 1, arquivo);
+        fread(&peso, sizeof(int), 1, arquivo);
+
+        if (tipo == FOLHA){
+            fread(&caracter, sizeof(char), 1, arquivo);
+            a = arv_cria_folha(caracter, peso);
+        } else{
+            a = arv_cria_folha('\0', peso);
+            a->tipo = NO;
+        }
+
+        a->esq = leCabeçalho(a->esq, arquivo);
+        a->dir = leCabeçalho(a->dir, arquivo);
+    }
+
+    return a;
+}
+
+void compactaArquivo(Arv *a, FILE *arquivo){
+    FILE *compactado = fopen("compactado.bin", "wb");
+    escreveCabeçalho(a, compactado);
+
+    int fim = -1;
+    fwrite(&fim, sizeof(int), 1, compactado);
+
+    fclose(compactado);
+}
