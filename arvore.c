@@ -11,7 +11,7 @@ typedef enum
 
 struct arvore
 {
-    char caracter;
+    unsigned char caracter;
     int peso;
     int tipo;
     Arv *esq;
@@ -196,53 +196,34 @@ void criaTabela(bitmap **tabela, bitmap *bm, Arv *a)
     if (!a)
         return;
 
+    // entra na esquerda, insere 0 no bitmap apos encerrar recursao remove o ultimo bit
+    if (a->esq)
+    {
+        bitmapAppendLeastSignificantBit(bm, 0);
+        criaTabela(tabela, bm, a->esq);
+        bitmapReduceLength(bm);
+    }
+
+    // entra na direita, insere 1 no bitmap apos encerrar recursao remove o ultimo bit
+    if (a->dir)
+    {
+        bitmapAppendLeastSignificantBit(bm, 1);
+        criaTabela(tabela, bm, a->dir);
+        bitmapReduceLength(bm);
+    }
+
     // se encontrar caractere (folha), escreve codigo ate o momento no indice adequado
     if (a->tipo == FOLHA)
     {
         bitmap *codigo = bitmapInit(8);
 
         for (int i = 0; i < bitmapGetLength(bm); i++)
+        {
             bitmapAppendLeastSignificantBit(codigo, bitmapGetBit(bm, i));
+        }
 
-        tabela[a->caracter] = codigo;
-
-        return;
-    }
-
-    // entra na esquerda, insere 0 no bitmap apos encerrar recursao remove o ultimo bit
-    if (a->esq)
-    {
-        bitmapAppendLeastSignificantBit(bm, 0);
-        criaTabela(tabela, bm, a->esq);
-
-        // cria novo e copia bm dentro dele
-        bitmap *novo = bitmapInit(8);
-        for (int i = 0; i < bitmapGetLength(bm) - 1; i++)
-            bitmapAppendLeastSignificantBit(novo, bitmapGetBit(bm, i));
-
-        // limpa bm e copia de volta tirando o ulitmo elemento
-        bitmapLibera(bm);
-        bm = bitmapInit(8);
-        for (int i = 0; i < bitmapGetLength(novo); i++)
-            bitmapAppendLeastSignificantBit(bm, bitmapGetBit(novo, i));
-    }
-
-    // entra na direito, insere 1 no bitmap apos encerrar recursao remove o ultimo bit
-    if (a->dir)
-    {
-        bitmapAppendLeastSignificantBit(bm, 1);
-        criaTabela(tabela, bm, a->dir);
-
-        // cria novo e copia bm dentro dele
-        bitmap *novo = bitmapInit(8);
-        for (int i = 0; i < bitmapGetLength(bm) - 1; i++)
-            bitmapAppendLeastSignificantBit(novo, bitmapGetBit(bm, i));
-
-        // limpa bm e copia de volta tirando o ulitmo elemento
-        bitmapLibera(bm);
-        bm = bitmapInit(8);
-        for (int i = 0; i < bitmapGetLength(novo); i++)
-            bitmapAppendLeastSignificantBit(bm, bitmapGetBit(novo, i));
+        tabela[(int)a->caracter] = codigo;
+        printf(" %c ", a->caracter);
     }
 
     return;

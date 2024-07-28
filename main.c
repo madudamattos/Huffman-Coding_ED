@@ -8,6 +8,7 @@
 
 #define TAM_NOME_CAMINHO 100
 #define TAM_VETOR 128
+#define MEGA_BYTE 1024 * 1024
 
 int contaCaracteres(FILE *arquivo, int *V);
 void imprimeVetorFrequencia(int *V);
@@ -47,7 +48,7 @@ int main(int argc, char *argv[])
 
     Lista *l = iniciaFolhas(V, TAM_VETOR, qtd);
 
-    imprimeLista(l, imprimeNo);
+    // imprimeLista(l, imprimeNo);
 
     Arv *a = organizaArvore(l);
 
@@ -55,77 +56,31 @@ int main(int argc, char *argv[])
 
     compactaArquivo(a, arquivo);
 
-    FILE *compactado = fopen("compactado.bin", "rb");
-
-    Arv *a2 = leCabecalho(a2, compactado);
-
-    imprimeArvore(a2);
-
-    bitmap *tabela[256];
-    bitmap *bm = bitmapInit(8);
-
-    criaTabela(tabela, bm, a2);
-
-    int i;
-
-    printf("\nB ");
-    for (i = 0; i < bitmapGetLength(tabela['b']); i++)
-    {
-        printf("%d", bitmapGetBit(tabela['b'], i));
-    }
-    printf("\n");
-
-    printf("M ");
-    for (i = 0; i < bitmapGetLength(tabela['m']); i++)
-    {
-        printf("%d", bitmapGetBit(tabela['m'], i));
-    }
-    printf("\n");
-
-    printf("O ");
-    for (i = 0; i < bitmapGetLength(tabela['o']); i++)
-    {
-        printf("%d", bitmapGetBit(tabela['o'], i));
-    }
-    printf("\n");
-
-    printf("E ");
-    for (i = 0; i < bitmapGetLength(tabela['e']); i++)
-    {
-        printf("%d", bitmapGetBit(tabela['e'], i));
-    }
-    printf("\n");
-
-    printf("S ");
-    for (i = 0; i < bitmapGetLength(tabela['s']); i++)
-    {
-        printf("%d", bitmapGetBit(tabela['s'], i));
-    }
-    printf("\n");
-
-    printf("ESPAÇO ");
-    for (i = 0; i < bitmapGetLength(tabela[' ']); i++)
-    {
-        printf("%d", bitmapGetBit(tabela[' '], i));
-    }
-    printf("\n");
-
     return 0;
 }
 
 // retorna a quantidade de caracteres presentes no vetor
 int contaCaracteres(FILE *arquivo, int *V)
 {
-    char c = '\0';
-    int d = 0;
+    unsigned char *charBuffer = (unsigned char *)malloc(MEGA_BYTE);
 
-    while (fscanf(arquivo, "%c", &c) == 1)
+    while (1)
     {
-        int d = (int)c;
-        V[d]++;
+        size_t bytesLidos = fread(charBuffer, sizeof(unsigned char), MEGA_BYTE, arquivo);
+
+        if (!bytesLidos)
+            break;
+
+        for (size_t i = 0; i < bytesLidos; i++)
+        {
+            int d = (int)charBuffer[i];
+            V[d]++;
+        }
     }
 
-    int qtd;
+    free(charBuffer);
+
+    int qtd = 0;
 
     for (int i = 0; i < TAM_VETOR; i++)
     {
