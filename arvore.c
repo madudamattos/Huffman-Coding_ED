@@ -150,7 +150,7 @@ void escreveCabecalho(Arv *a, FILE *arquivo)
         fwrite(&a->peso, sizeof(int), 1, arquivo);
 
         if (a->tipo == 0)
-            fwrite(&a->caracter, sizeof(char), 1, arquivo);
+            fwrite(&a->caracter, sizeof(unsigned char), 1, arquivo);
     }
 
     escreveCabecalho(a->esq, arquivo);

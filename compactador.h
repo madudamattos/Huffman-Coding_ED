@@ -6,4 +6,6 @@
 
 void compactaArquivo(Arv *a, FILE *arquivo);
 
+int bitmapToInt(bitmap *bm);
+
 #endif
