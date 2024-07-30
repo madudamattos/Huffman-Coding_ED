@@ -3,6 +3,8 @@
 #include "arvore.h"
 #include "lista.h"
 
+#define KILO_BYTE 1024
+
 typedef enum
 {
     FOLHA = 0,
@@ -11,7 +13,7 @@ typedef enum
 
 struct arvore
 {
-    char caracter;
+    unsigned char caracter;
     int peso;
     int tipo;
     Arv *esq;
@@ -134,6 +136,21 @@ void imprimeArvore(Arv *a)
     printf(">");
 }
 
+static int max2 (int a, int b)
+{
+    return (a > b) ? a : b;
+}
+
+//retorna a altura da árvore
+int arv_altura (Arv* a){
+    if (!a){
+        return -1;
+    } 
+    else {
+        return 1 + max2 (arv_altura (a->esq), arv_altura(a->dir));
+    }
+} 
+
 void escreveCabecalho(Arv *a, FILE *arquivo)
 {
     if (!a)
@@ -150,7 +167,7 @@ void escreveCabecalho(Arv *a, FILE *arquivo)
         fwrite(&a->peso, sizeof(int), 1, arquivo);
 
         if (a->tipo == 0)
-            fwrite(&a->caracter, sizeof(char), 1, arquivo);
+            fwrite(&a->caracter, sizeof(unsigned char), 1, arquivo);
     }
 
     escreveCabecalho(a->esq, arquivo);
@@ -196,54 +213,46 @@ void criaTabela(bitmap **tabela, bitmap *bm, Arv *a)
     if (!a)
         return;
 
-    // se encontrar caractere (folha), escreve codigo ate o momento no indice adequado
-    if (a->tipo == FOLHA)
-    {
-        bitmap *codigo = bitmapInit(8);
-
-        for (int i = 0; i < bitmapGetLength(bm); i++)
-            bitmapAppendLeastSignificantBit(codigo, bitmapGetBit(bm, i));
-
-        tabela[a->caracter] = codigo;
-
-        return;
-    }
-
     // entra na esquerda, insere 0 no bitmap apos encerrar recursao remove o ultimo bit
     if (a->esq)
     {
         bitmapAppendLeastSignificantBit(bm, 0);
         criaTabela(tabela, bm, a->esq);
-
-        // cria novo e copia bm dentro dele
-        bitmap *novo = bitmapInit(8);
-        for (int i = 0; i < bitmapGetLength(bm) - 1; i++)
-            bitmapAppendLeastSignificantBit(novo, bitmapGetBit(bm, i));
-
-        // limpa bm e copia de volta tirando o ulitmo elemento
-        bitmapLibera(bm);
-        bm = bitmapInit(8);
-        for (int i = 0; i < bitmapGetLength(novo); i++)
-            bitmapAppendLeastSignificantBit(bm, bitmapGetBit(novo, i));
+        bitmapReduceLength(bm);
     }
 
-    // entra na direito, insere 1 no bitmap apos encerrar recursao remove o ultimo bit
+    // entra na direita, insere 1 no bitmap apos encerrar recursao remove o ultimo bit
     if (a->dir)
     {
         bitmapAppendLeastSignificantBit(bm, 1);
         criaTabela(tabela, bm, a->dir);
+        bitmapReduceLength(bm);
+    }
 
-        // cria novo e copia bm dentro dele
-        bitmap *novo = bitmapInit(8);
-        for (int i = 0; i < bitmapGetLength(bm) - 1; i++)
-            bitmapAppendLeastSignificantBit(novo, bitmapGetBit(bm, i));
+    // se encontrar caractere (folha), escreve codigo ate o momento no indice adequado
+    if (a->tipo == FOLHA)
+    {
+        bitmap *codigo = bitmapInit(KILO_BYTE);
 
-        // limpa bm e copia de volta tirando o ulitmo elemento
-        bitmapLibera(bm);
-        bm = bitmapInit(8);
-        for (int i = 0; i < bitmapGetLength(novo); i++)
-            bitmapAppendLeastSignificantBit(bm, bitmapGetBit(novo, i));
+        for (int i = 0; i < bitmapGetLength(bm); i++)
+        {
+            bitmapAppendLeastSignificantBit(codigo, bitmapGetBit(bm, i));
+        }
+
+        tabela[(int)a->caracter] = codigo;
     }
 
     return;
+}
+
+void imprimeTabela(bitmap **tabela) {
+    for (int i = 0; i < 256; i++) {
+        if (tabela[i] != NULL) {
+            printf("tabela[%d]: ", i);
+            for (unsigned int j = 0; j < bitmapGetLength(tabela[i]); j++) {
+                printf("%d", bitmapGetBit(tabela[i], j));
+            }
+            printf("\n");
+        }
+    }
 }

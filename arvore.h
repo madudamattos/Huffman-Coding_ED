@@ -30,6 +30,8 @@ Arv *organizaArvore(Lista *l);
 
 void imprimeArvore(Arv *a);
 
+int arv_altura (Arv* a);
+
 void escreveCabecalho(Arv *a, FILE *arquivo);
 
 Arv *leCabecalho(Arv *a, FILE *arquivo);
@@ -37,5 +39,7 @@ Arv *leCabecalho(Arv *a, FILE *arquivo);
 void compactaArquivo(Arv *a, FILE *arquivo);
 
 void criaTabela(bitmap **tabela, bitmap *bm, Arv *a);
+
+void imprimeTabela(bitmap **tabela);
 
 #endif

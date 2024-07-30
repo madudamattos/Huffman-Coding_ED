@@ -4,3 +4,4 @@ bitmap.o
 main.o
 compactador.o
 lista.o
+compactado.bin
