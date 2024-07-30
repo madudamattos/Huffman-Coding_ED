@@ -74,7 +74,6 @@ void imprimeVetorFrequencia(int *V, int tam)
     printf("\n");
 }
 
-
 // PARTE DO CODIGO DO GPT, COMPACTOU MAS NAO SEI MTO BEM OQ TA ACONTECENDO NEM SEI SE TA CERTO
 void compactaArquivo(Arv *a, FILE *arquivo) {
     FILE *compactado = fopen("compactado.bin", "wb");
@@ -87,6 +86,8 @@ void compactaArquivo(Arv *a, FILE *arquivo) {
     bitmap *bm = bitmapInit(MEGA_BYTE);
 
     criaTabela(tabela, bm, a);
+
+    //imprimeTabela(tabela);
 
     unsigned char *charBuffer = (unsigned char *)malloc(MEGA_BYTE);
     unsigned char bitBuffer = 0;
@@ -102,7 +103,9 @@ void compactaArquivo(Arv *a, FILE *arquivo) {
             unsigned char caractere = charBuffer[i];
             bitmap *caractereCompactado = tabela[(int)caractere];
 
-            printf("Caractere original: %c\n", caractere);
+            printf("Caractere original: %c %d\n", caractere, (int) caractere);
+
+            //printf("Tamanho: %d\n", bitmapGetLength(caractereCompactado));
             for (unsigned int j = 0; j < bitmapGetLength(caractereCompactado); j++) {
                 unsigned char bit = bitmapGetBit(caractereCompactado, j);
                 printf("%d", bit);

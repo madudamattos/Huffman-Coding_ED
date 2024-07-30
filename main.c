@@ -7,7 +7,7 @@
 #include "bitmap.h"
 
 #define TAM_NOME_CAMINHO 300
-#define TAM_VETOR 128
+#define TAM_VETOR 256
 #define MEGA_BYTE 1024 * 1024
 
 

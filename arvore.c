@@ -245,3 +245,15 @@ void criaTabela(bitmap **tabela, bitmap *bm, Arv *a)
 
     return;
 }
+
+void imprimeTabela(bitmap **tabela) {
+    for (int i = 0; i < 256; i++) {
+        if (tabela[i] != NULL) {
+            printf("tabela[%d]: ", i);
+            for (unsigned int j = 0; j < bitmapGetLength(tabela[i]); j++) {
+                printf("%d", bitmapGetBit(tabela[i], j));
+            }
+            printf("\n");
+        }
+    }
+}
