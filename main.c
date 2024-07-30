@@ -20,20 +20,14 @@ int main(int argc, char *argv[])
     }
 
     char caminhoArquivo[TAM_NOME_CAMINHO];
-
     strncpy(caminhoArquivo, argv[1], TAM_NOME_CAMINHO - 1);
 
-    FILE *arquivo = fopen(caminhoArquivo, "r");
-
-    if (!arquivo)
-    {
-        printf("Erro ao abrir o arquivo %s\n", caminhoArquivo);
-        return 0;
-    }
+    //printf("%s", caminhoArquivo);
 
     int V[TAM_VETOR];
+    int qtd = contaCaracteres(caminhoArquivo, V, TAM_VETOR);
 
-    int qtd = contaCaracteres(arquivo, V, TAM_VETOR);
+    //printf("%s", caminhoArquivo);
 
     //imprimeVetorFrequencia(V);
 
@@ -45,7 +39,19 @@ int main(int argc, char *argv[])
 
     //printf("Altura Arvore: %d", arv_altura(a));
 
+    FILE* arquivo = fopen(caminhoArquivo, "rb");
+
+    printf("%s", caminhoArquivo);
+
+    if (!arquivo)
+    {
+        printf("Erro ao abrir o arquivo %s\n", caminhoArquivo);
+        return 0;
+    }
+    
     compactaArquivo(a, arquivo);
+
+    fclose(arquivo);
 
     return 0;
 }

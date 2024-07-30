@@ -4,7 +4,7 @@
 #include "arvore.h"
 #include "bitmap.h"
 
-int contaCaracteres(FILE *arquivo, int *V, int tam);
+int contaCaracteres(char* caminhoArquivo, int *V, int tam);
 
 void imprimeVetorFrequencia(int *V, int tam);
 
