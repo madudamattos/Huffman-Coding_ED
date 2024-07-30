@@ -8,6 +8,6 @@ int contaCaracteres(char* caminhoArquivo, int *V, int tam);
 
 void imprimeVetorFrequencia(int *V, int tam);
 
-void compactaArquivo(Arv *a, FILE *arquivo);
+void compactaArquivo(Arv *a, bitmap** tabela, char *caminhoArquivo);
 
 #endif

@@ -7,12 +7,13 @@
 #include "bitmap.h"
 
 #define TAM_NOME_CAMINHO 300
-#define TAM_VETOR 256
+#define TAM_ASCII 256
 #define MEGA_BYTE 1024 * 1024
 
 
 int main(int argc, char *argv[])
 {
+    // etapa de leitura do arquivo e criação da árvore de compactação
     if (argc < 2)
     {
         printf("Uso: %s <nome_arquivo>\n", argv[0]);
@@ -22,34 +23,31 @@ int main(int argc, char *argv[])
     char caminhoArquivo[TAM_NOME_CAMINHO];
     strncpy(caminhoArquivo, argv[1], TAM_NOME_CAMINHO - 1);
 
-    int V[TAM_VETOR];
-    int qtd = contaCaracteres(argv[1], V, TAM_VETOR);
+    int V[TAM_ASCII];
+    int qtd = contaCaracteres(caminhoArquivo, V, TAM_ASCII);
 
-    //imprimeVetorFrequencia(V);
-
-    Lista *l = iniciaFolhas(V, TAM_VETOR, qtd);
+    Lista *l = iniciaFolhas(V, TAM_ASCII, qtd);
 
     Arv *a = organizaArvore(l);
 
-    //imprimeArvore(a);
 
-    //printf("Altura Arvore: %d", arv_altura(a));
-
+    // etapa de criacao da tabela de compactação e realização da compactação do arquivo
     strncpy(caminhoArquivo, argv[1], TAM_NOME_CAMINHO - 1);
-
-    FILE* arquivo = fopen(caminhoArquivo, "rb");
-
-    if (!arquivo)
-    {
-        printf("Erro ao abrir o arquivo %s\n", caminhoArquivo);
-        return 0;
-    }
     
-    compactaArquivo(a, arquivo);
+    bitmap *tabela[256] = {NULL}; 
+    bitmap *bm = bitmapInit(MEGA_BYTE);
+    criaTabela(tabela, bm, a);
+
+    compactaArquivo(a, tabela, caminhoArquivo);
 
     printf("Compactação de %s completa\n", caminhoArquivo);
 
-    fclose(arquivo);
+
+    // etapa de finalização e liberação de memoria do programa 
+    bitmapLibera(bm);
+    liberaLista(l);
+    liberaArvore(a);
+    liberaTabela(tabela, TAM_ASCII);
 
     return 0;
 }

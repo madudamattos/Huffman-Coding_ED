@@ -136,6 +136,15 @@ void imprimeArvore(Arv *a)
     printf(">");
 }
 
+void liberaArvore(Arv* a){
+    if(!a) return;
+
+    liberaArvore(a->esq);
+    liberaArvore(a->dir);
+    free(a);
+}
+
+
 static int max2 (int a, int b)
 {
     return (a > b) ? a : b;
@@ -208,34 +217,29 @@ Arv *leCabecalho(Arv *a, FILE *arquivo)
     return a;
 }
 
-void criaTabela(bitmap **tabela, bitmap *bm, Arv *a)
-{
+void criaTabela(bitmap **tabela, bitmap *bm, Arv *a) {
     if (!a)
         return;
 
     // entra na esquerda, insere 0 no bitmap apos encerrar recursao remove o ultimo bit
-    if (a->esq)
-    {
+    if (a->esq) {
         bitmapAppendLeastSignificantBit(bm, 0);
         criaTabela(tabela, bm, a->esq);
         bitmapReduceLength(bm);
     }
 
     // entra na direita, insere 1 no bitmap apos encerrar recursao remove o ultimo bit
-    if (a->dir)
-    {
+    if (a->dir) {
         bitmapAppendLeastSignificantBit(bm, 1);
         criaTabela(tabela, bm, a->dir);
         bitmapReduceLength(bm);
     }
 
     // se encontrar caractere (folha), escreve codigo ate o momento no indice adequado
-    if (a->tipo == FOLHA)
-    {
+    if (a->tipo == FOLHA) {
         bitmap *codigo = bitmapInit(KILO_BYTE);
 
-        for (int i = 0; i < bitmapGetLength(bm); i++)
-        {
+        for (int i = 0; i < bitmapGetLength(bm); i++) {
             bitmapAppendLeastSignificantBit(codigo, bitmapGetBit(bm, i));
         }
 
@@ -244,6 +248,16 @@ void criaTabela(bitmap **tabela, bitmap *bm, Arv *a)
 
     return;
 }
+
+void liberaTabela(bitmap **tabela, int tam) {
+    for (int i = 0; i < tam; i++) {
+        if (tabela[i] != NULL) {
+            bitmapLibera(tabela[i]);
+            tabela[i] = NULL;
+        }
+    }
+}
+
 
 void imprimeTabela(bitmap **tabela) {
     for (int i = 0; i < 256; i++) {

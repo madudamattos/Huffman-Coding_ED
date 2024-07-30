@@ -10,12 +10,13 @@
 // retorna a quantidade de caracteres presentes no vetor
 int contaCaracteres(char *caminhoArquivo, int *V, int tam)
 {   
+    
     char caminhoEntrada[TAM_NOME_CAMINHO];
     strcpy(caminhoEntrada, caminhoArquivo);
     
-    FILE *arquivo = fopen(caminhoEntrada, "rb");
+    FILE *entrada = fopen(caminhoEntrada, "rb");
 
-    if (!arquivo)
+    if (!entrada)
     {
         printf("Erro ao abrir o arquivo %s\n", caminhoEntrada);
         return 0;
@@ -32,7 +33,7 @@ int contaCaracteres(char *caminhoArquivo, int *V, int tam)
 
     while (1)
     {
-        size_t bytesLidos = fread(charBuffer, sizeof(unsigned char), MEGA_BYTE, arquivo);
+        size_t bytesLidos = fread(charBuffer, sizeof(unsigned char), MEGA_BYTE, entrada);
 
         if (!bytesLidos)
             break;
@@ -45,7 +46,7 @@ int contaCaracteres(char *caminhoArquivo, int *V, int tam)
     }
 
     free(charBuffer);
-    fclose(arquivo);
+    fclose(entrada);
 
     int qtd = 0;
 
@@ -74,27 +75,29 @@ void imprimeVetorFrequencia(int *V, int tam)
     printf("\n");
 }
 
+
 // PARTE DO CODIGO DO GPT, COMPACTOU MAS NAO SEI MTO BEM OQ TA ACONTECENDO NEM SEI SE TA CERTO
-void compactaArquivo(Arv *a, FILE *arquivo) {
+void compactaArquivo(Arv *a, bitmap** tabela, char *caminhoArquivo) {
+    FILE* entrada = fopen(caminhoArquivo, "rb");
+
+    if (!entrada)
+    {
+        printf("Erro ao abrir o arquivo %s\n", caminhoArquivo);
+        return;
+    }
+    
     FILE *compactado = fopen("compactado.bin", "wb");
     escreveCabecalho(a, compactado);
 
     int fim = -1;
     fwrite(&fim, sizeof(int), 1, compactado);
 
-    bitmap *tabela[256];
-    bitmap *bm = bitmapInit(MEGA_BYTE);
-
-    criaTabela(tabela, bm, a);
-
-    //imprimeTabela(tabela);
-
     unsigned char *charBuffer = (unsigned char *)malloc(MEGA_BYTE);
     unsigned char bitBuffer = 0;
     int bitCount = 0;
 
     while (1) {
-        size_t bytesLidos = fread(charBuffer, sizeof(unsigned char), MEGA_BYTE, arquivo);
+        size_t bytesLidos = fread(charBuffer, sizeof(unsigned char), MEGA_BYTE, entrada);
 
         if (!bytesLidos)
             break;
@@ -128,5 +131,6 @@ void compactaArquivo(Arv *a, FILE *arquivo) {
     }
 
     free(charBuffer);
+    fclose(entrada);
     fclose(compactado);
 }

@@ -118,3 +118,13 @@ int ehVaziaLista(Lista* l){
 int ehUnitariaLista(Lista* l){
     return (l->prim != NULL && l->prim == l->ult);
 }
+
+void liberaLista(Lista* l) {
+    Celula* atual = l->prim;
+    while (atual != NULL) {
+        Celula* prox = atual->prox;
+        free(atual);
+        atual = prox;
+    }
+    free(l);
+}

@@ -24,5 +24,6 @@ int ehVaziaLista(Lista* l);
 
 int ehUnitariaLista(Lista* l);
 
+void liberaLista(Lista* l);
 
 #endif
