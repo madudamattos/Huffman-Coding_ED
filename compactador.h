@@ -4,9 +4,10 @@
 #include "arvore.h"
 #include "bitmap.h"
 
+int contaCaracteres(FILE *arquivo, int *V, int tam);
+
+void imprimeVetorFrequencia(int *V, int tam);
+
 void compactaArquivo(Arv *a, FILE *arquivo);
-
-int bitmapToInt(bitmap *bm);
-
 
 #endif

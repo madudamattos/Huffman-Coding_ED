@@ -10,12 +10,9 @@
 #define TAM_VETOR 128
 #define MEGA_BYTE 1024 * 1024
 
-int contaCaracteres(FILE *arquivo, int *V);
-void imprimeVetorFrequencia(int *V);
 
 int main(int argc, char *argv[])
 {
-
     if (argc < 2)
     {
         printf("Uso: %s <nome_arquivo>\n", argv[0]);
@@ -36,13 +33,7 @@ int main(int argc, char *argv[])
 
     int V[TAM_VETOR];
 
-    // inicializa o vetor com 0
-    for (int i = 0; i < TAM_VETOR; i++)
-    {
-        V[i] = 0;
-    }
-
-    int qtd = contaCaracteres(arquivo, V);
+    int qtd = contaCaracteres(arquivo, V, TAM_VETOR);
 
     //imprimeVetorFrequencia(V);
 
@@ -57,52 +48,4 @@ int main(int argc, char *argv[])
     compactaArquivo(a, arquivo);
 
     return 0;
-}
-
-// retorna a quantidade de caracteres presentes no vetor
-int contaCaracteres(FILE *arquivo, int *V)
-{
-    unsigned char *charBuffer = (unsigned char *)malloc(MEGA_BYTE);
-
-    while (1)
-    {
-        size_t bytesLidos = fread(charBuffer, sizeof(unsigned char), MEGA_BYTE, arquivo);
-
-        if (!bytesLidos)
-            break;
-
-        for (size_t i = 0; i < bytesLidos; i++)
-        {
-            int d = (int)charBuffer[i];
-            V[d]++;
-        }
-    }
-
-    free(charBuffer);
-
-    int qtd = 0;
-
-    for (int i = 0; i < TAM_VETOR; i++)
-    {
-        if (V[i] != 0)
-        {
-            qtd++;
-        }
-    }
-
-    return qtd;
-}
-
-void imprimeVetorFrequencia(int *V)
-{
-
-    for (int i = 0; i < TAM_VETOR; i++)
-    {
-        if (V[i] != 0)
-        {
-            printf("%c: %d\n", i, V[i]);
-        }
-    }
-
-    printf("\n");
 }

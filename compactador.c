@@ -6,6 +6,61 @@
 #define MEGA_BYTE (1024 * 1024)
 
 
+// retorna a quantidade de caracteres presentes no vetor
+int contaCaracteres(FILE *arquivo, int *V, int tam)
+{
+    // inicializa o vetor com 0
+    for (int i = 0; i < tam; i++)
+    {
+        V[i] = 0;
+    }
+
+    unsigned char *charBuffer = (unsigned char *)malloc(MEGA_BYTE);
+
+    while (1)
+    {
+        size_t bytesLidos = fread(charBuffer, sizeof(unsigned char), MEGA_BYTE, arquivo);
+
+        if (!bytesLidos)
+            break;
+
+        for (size_t i = 0; i < bytesLidos; i++)
+        {
+            int d = (int)charBuffer[i];
+            V[d]++;
+        }
+    }
+
+    free(charBuffer);
+
+    int qtd = 0;
+
+    for (int i = 0; i < tam; i++)
+    {
+        if (V[i] != 0)
+        {
+            qtd++;
+        }
+    }
+
+    return qtd;
+}
+
+void imprimeVetorFrequencia(int *V, int tam)
+{
+
+    for (int i = 0; i < tam; i++)
+    {
+        if (V[i] != 0)
+        {
+            printf("%c: %d\n", i, V[i]);
+        }
+    }
+
+    printf("\n");
+}
+
+
 // VERSAO CHATGPT, NAO TA FUNCIONANDO MAS DA PRA APROVEITAR
 // void compactaArquivo(Arv *a, FILE *arquivo) {
 //     FILE *compactado = fopen("compactado.bin", "wb");
@@ -91,3 +146,5 @@ void compactaArquivo(Arv *a, FILE *arquivo) {
     free(charBuffer);
     fclose(compactado);
 }
+
+
