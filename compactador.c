@@ -74,6 +74,7 @@ void imprimeVetorFrequencia(int *V, int tam)
     printf("\n");
 }
 
+
 // PARTE DO CODIGO DO GPT, COMPACTOU MAS NAO SEI MTO BEM OQ TA ACONTECENDO NEM SEI SE TA CERTO
 void compactaArquivo(Arv *a, FILE *arquivo) {
     FILE *compactado = fopen("compactado.bin", "wb");

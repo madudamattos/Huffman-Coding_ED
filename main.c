@@ -6,7 +6,7 @@
 #include "compactador.h"
 #include "bitmap.h"
 
-#define TAM_NOME_CAMINHO 100
+#define TAM_NOME_CAMINHO 300
 #define TAM_VETOR 128
 #define MEGA_BYTE 1024 * 1024
 
@@ -22,12 +22,8 @@ int main(int argc, char *argv[])
     char caminhoArquivo[TAM_NOME_CAMINHO];
     strncpy(caminhoArquivo, argv[1], TAM_NOME_CAMINHO - 1);
 
-    //printf("%s", caminhoArquivo);
-
     int V[TAM_VETOR];
-    int qtd = contaCaracteres(caminhoArquivo, V, TAM_VETOR);
-
-    //printf("%s", caminhoArquivo);
+    int qtd = contaCaracteres(argv[1], V, TAM_VETOR);
 
     //imprimeVetorFrequencia(V);
 
@@ -39,9 +35,9 @@ int main(int argc, char *argv[])
 
     //printf("Altura Arvore: %d", arv_altura(a));
 
-    FILE* arquivo = fopen(caminhoArquivo, "rb");
+    strncpy(caminhoArquivo, argv[1], TAM_NOME_CAMINHO - 1);
 
-    printf("%s", caminhoArquivo);
+    FILE* arquivo = fopen(caminhoArquivo, "rb");
 
     if (!arquivo)
     {
@@ -50,6 +46,8 @@ int main(int argc, char *argv[])
     }
     
     compactaArquivo(a, arquivo);
+
+    printf("compactacao terminou\n");
 
     fclose(arquivo);
 
