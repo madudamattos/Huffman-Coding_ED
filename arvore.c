@@ -3,6 +3,8 @@
 #include "arvore.h"
 #include "lista.h"
 
+#define KILO_BYTE 1024
+
 typedef enum
 {
     FOLHA = 0,
@@ -134,6 +136,21 @@ void imprimeArvore(Arv *a)
     printf(">");
 }
 
+static int max2 (int a, int b)
+{
+    return (a > b) ? a : b;
+}
+
+//retorna a altura da árvore
+int arv_altura (Arv* a){
+    if (!a){
+        return -1;
+    } 
+    else {
+        return 1 + max2 (arv_altura (a->esq), arv_altura(a->dir));
+    }
+} 
+
 void escreveCabecalho(Arv *a, FILE *arquivo)
 {
     if (!a)
@@ -215,7 +232,7 @@ void criaTabela(bitmap **tabela, bitmap *bm, Arv *a)
     // se encontrar caractere (folha), escreve codigo ate o momento no indice adequado
     if (a->tipo == FOLHA)
     {
-        bitmap *codigo = bitmapInit(8);
+        bitmap *codigo = bitmapInit(KILO_BYTE);
 
         for (int i = 0; i < bitmapGetLength(bm); i++)
         {

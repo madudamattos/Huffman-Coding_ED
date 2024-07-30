@@ -44,15 +44,15 @@ int main(int argc, char *argv[])
 
     int qtd = contaCaracteres(arquivo, V);
 
-    imprimeVetorFrequencia(V);
+    //imprimeVetorFrequencia(V);
 
     Lista *l = iniciaFolhas(V, TAM_VETOR, qtd);
 
-    // imprimeLista(l, imprimeNo);
-
     Arv *a = organizaArvore(l);
 
-    imprimeArvore(a);
+    //imprimeArvore(a);
+
+    //printf("Altura Arvore: %d", arv_altura(a));
 
     compactaArquivo(a, arquivo);
 
