@@ -22,13 +22,10 @@
  */
 typedef struct lista Lista;
 
-
 /**
  * @brief Struct que representa a célula, o elemento unitário da lista, que armazena o conteúdo desejado. 
  */
 typedef struct celula Celula;
-
-
 
 /**
  * @brief Cria uma lista vazia, já alocando seu espaço de memória e inicializa com zero.
@@ -47,7 +44,6 @@ Lista* criaLista();
  */
 void insereLista(Lista* l, void* a, int peso);
 
-
 /**
  * @brief Retira o primeiro elemento da lista.
  *
@@ -55,7 +51,6 @@ void insereLista(Lista* l, void* a, int peso);
  * @return o elemento retirado da lista.
  */
 void* retiraLista(Lista* l);
-
 
 /**
  * @brief Imprime a lista, utilizando a função de parâmetro para imprimir individualmente cada elemento contido na lista.

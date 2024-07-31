@@ -5,14 +5,12 @@
 
 #define KILO_BYTE 1024
 
-typedef enum
-{
+typedef enum {
     FOLHA = 0,
     NO = 1
 } TIPO;
 
-struct arvore
-{
+struct arvore {
     unsigned char caracter;
     int peso;
     int tipo;
@@ -20,7 +18,22 @@ struct arvore
     Arv *dir;
 };
 
-// recebe o vetor com a frequencia dos caracteres, o tamanho máximo desse vetor e quantidade de caracteres com frequencia diferente de zero que serao convertidos em folhas
+
+char retornaCaracterArvore(Arv *a)
+{
+    return a->caracter;
+}
+
+int retornaPesoArvore(Arv *a)
+{
+    return a->peso;
+}
+
+int ehFolhaArvore(Arv *a)
+{
+    return a->tipo == FOLHA;
+}
+
 Lista *iniciaFolhas(int V[], int tam, int qtd)
 {
     // vetor que vai armazenar todas as folhas iniciais
@@ -54,7 +67,6 @@ Arv *arv_cria_folha(char caracter, int frequencia)
     return folha;
 }
 
-// cria uma árvore com subárvore esquerda e e subárvore direita d
 Arv *arv_cria_no(Arv *e, Arv *d)
 {
     Arv *a = calloc(1, sizeof(Arv));
@@ -80,41 +92,7 @@ Arv *arv_cria_no(Arv *e, Arv *d)
     return a;
 }
 
-void imprimeNo(void *ptr)
-{
-    Arv *a = (Arv *)ptr;
-    printf("%d %c %d", a->tipo, a->caracter, a->peso);
-}
-
-char retornaCaracterArvore(Arv *a)
-{
-    return a->caracter;
-}
-
-int retornaPesoArvore(Arv *a)
-{
-    return a->peso;
-}
-
-int ehFolhaArvore(Arv *a)
-{
-    return a->tipo == FOLHA;
-}
-
-Arv* percorreArvore(Arv *a, unsigned char bit)
-{
-    if (bit == 0)
-    {
-        return a->esq;
-    }
-    else
-    {
-        return a->dir;
-    }
-}
-
-Arv *organizaArvore(Lista *l)
-{
+Arv *organizaArvore(Lista *l){
     while (!ehUnitariaLista(l))
     {
         Arv *e = (Arv *)retiraLista(l);
@@ -126,6 +104,17 @@ Arv *organizaArvore(Lista *l)
     Arv *arvore = (Arv *)retiraLista(l);
 
     return arvore;
+}
+
+Arv* percorreArvore(Arv *a, unsigned char bit){
+    if (bit == 0)
+    {
+        return a->esq;
+    }
+    else
+    {
+        return a->dir;
+    }
 }
 
 void imprimeArvore(Arv *a)
@@ -148,6 +137,12 @@ void imprimeArvore(Arv *a)
     printf(">");
 }
 
+void imprimeNo(void *ptr)
+{
+    Arv *a = (Arv *)ptr;
+    printf("%d %c %d", a->tipo, a->caracter, a->peso);
+}
+
 void liberaArvore(Arv* a){
     if(!a) return;
 
@@ -156,13 +151,11 @@ void liberaArvore(Arv* a){
     free(a);
 }
 
-
-static int max2 (int a, int b)
-{
+// retorna o maior de dois inteiros. Caso a seja maior, retorna a. Caso seja menor ou igual a b, retorna b.
+static int max2 (int a, int b){
     return (a > b) ? a : b;
 }
 
-//retorna a altura da árvore
 int arv_altura (Arv* a){
     if (!a){
         return -1;
@@ -172,8 +165,7 @@ int arv_altura (Arv* a){
     }
 } 
 
-void escreveCabecalho(Arv *a, FILE *arquivo)
-{
+void escreveCabecalho(Arv *a, FILE *arquivo){
     if (!a)
     {
         int nulo = 1;
@@ -195,8 +187,7 @@ void escreveCabecalho(Arv *a, FILE *arquivo)
     escreveCabecalho(a->dir, arquivo);
 }
 
-Arv *leCabecalho(Arv *a, FILE *arquivo)
-{
+Arv *leCabecalho(Arv *a, FILE *arquivo){
     int nulo;
 
     fread(&nulo, sizeof(int), 1, arquivo);

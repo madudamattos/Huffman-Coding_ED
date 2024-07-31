@@ -20,7 +20,7 @@ typedef struct arvore Arv;
 char retornaCaracterArvore(Arv *a);
 
 /**
- * @brief Retorna o peso da árvore.
+ * @brief Retorna o peso da árvore, que  corresponde a frequência do caracter em um arquivo.
  *
  * @param a A árvore.
  * @return O peso do nó (ou peso da árvore).
@@ -28,12 +28,12 @@ char retornaCaracterArvore(Arv *a);
 int retornaPesoArvore(Arv *a);
 
 /**
- * @brief Retorna o tipo da árvore, se é nó interno ou nó folha.
+ * @brief Verifica se o nó da árvore é nó folha ou nó interno.
  *
- * @param a A árvore.
- * @return 1 se for nó interno e 0 se for nó folha.
+ * @param a o nó da árvore.
+ * @return retorna 0 se o nó em questão for um nó folha e retorna 1 se for nó interno.
  */
-int retornaTipoArvore(Arv *a);
+int ehFolhaArvore(Arv *a);
 
 
 /**
@@ -42,12 +42,12 @@ int retornaTipoArvore(Arv *a);
  * @param V Vetor com as frequências dos caracteres.
  * @param tam Tamanho máximo do vetor.
  * @param qtd Quantidade de caracteres com frequência diferente de zero.
- * @return A lista de folhas inicializadas.
+ * @return Uma lista de nós-folhas com os caracteres inicializados, ordenada de forma crescente de acordo com o peso de cada nó.
  */
 Lista *iniciaFolhas(int V[], int tam, int qtd);
 
 /**
- * @brief Cria uma folha da árvore.
+ * @brief Cria uma árvore do tipo folha inicializada com o caractere e a frequência dele.
  *
  * @param caracter O caractere da folha.
  * @param frequencia A frequência do caractere.
@@ -56,7 +56,7 @@ Lista *iniciaFolhas(int V[], int tam, int qtd);
 Arv *arv_cria_folha(char caracter, int frequencia);
 
 /**
- * @brief Cria um nó da árvore com subárvores esquerda e direita.
+ * @brief Cria um nó interno da árvore com subárvores esquerda e direita.
  *
  * @param e Subárvore esquerda.
  * @param d Subárvore direita.
@@ -65,22 +65,31 @@ Arv *arv_cria_folha(char caracter, int frequencia);
 Arv *arv_cria_no(Arv *e, Arv *d);
 
 /**
- * @brief Organiza a árvore a partir de uma lista de folhas.
+ * @brief Cria uma árvore binária a partir lista de folhas já inicializadas.
  *
  * @param l A lista de folhas.
- * @return A árvore organizada.
+ * @return Uma árvore binária de caracteres organizada pela frequência dos caracteres em um arquivo (peso).
  */
 Arv *organizaArvore(Lista *l);
 
 /**
- * @brief Imprime o nó da árvore.
+ * @brief Anda na árvore para direita ou para a esquerda dependendo do bit de entrada.
+ *
+ * @param a o nó da árvore em questão.
+ * @param bit o bit de input que dita a descida na árvore.
+ * @return retorna o nó filho da esquerda da árvore caso o bit de entrada seja 0, e retorna o nó filho da direita da árvore caso o bit de entrada seja 1.
+ */
+Arv* percorreArvore(Arv *a, unsigned char bit);
+
+/**
+ * @brief Imprime o nó da árvore, com as seguintes informações: o caractere contido na árvore, a frequência do caractere (peso do nó) e o tipo do nó (se é nó-folha ou nó interno).
  *
  * @param ptr Ponteiro para o nó a ser impresso.
  */
 void imprimeNo(void *ptr);
 
 /**
- * @brief Imprime a árvore.
+ * @brief Imprime a árvore com a notação textual <a<sae><sad>>.
  *
  * @param a A árvore a ser impressa.
  */
@@ -119,19 +128,16 @@ void escreveCabecalho(Arv *a, FILE *arquivo);
 Arv *leCabecalho(Arv *a, FILE *arquivo);
 
 /**
- * @brief Cria a tabela de códigos a partir da árvore.
+ * @brief Cria a tabela de codificação dos caracteres a partir da árvore da árvore binária de caracteres.
  *
  * @param tabela A tabela de códigos.
  * @param bm O bitmap temporário para armazenar o código.
  * @param a A árvore.
  */
-
 void criaTabela(bitmap **tabela, bitmap *bm, Arv *a);
 
-Arv *percorreArvore(Arv *a, unsigned char bit);
-
 /**
- * @brief Libera a memória alocada para a tabela de códigos.
+ * @brief Libera a memória alocada para a tabela de códificação.
  *
  * @param tabela A tabela de códigos.
  * @param tam O tamanho da tabela.
@@ -139,9 +145,9 @@ Arv *percorreArvore(Arv *a, unsigned char bit);
 void liberaTabela(bitmap** tabela, int tam);
 
 /**
- * @brief Imprime a tabela de códigos.
+ * @brief Imprime a tabela de codificação.
  *
- * @param tabela A tabela de códigos.
+ * @param tabela A tabela de codificação.
  */
 void imprimeTabela(bitmap **tabela);
 
