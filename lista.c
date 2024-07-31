@@ -2,14 +2,13 @@
 #include <stdlib.h>
 #include "lista.h"
 
-typedef void (*FuncaoImprime)(void*);
 
-typedef struct celula{
+struct celula{
     void* conteudo;
     int peso;
     Celula* ant;
     Celula* prox;
-}Celula;
+};
 
 struct lista{
   int TAM; 
@@ -27,7 +26,6 @@ Lista* criaLista(){
     return novaLista;
 }
 
-//insere em ordem crescente os elementos de acordo com o peso do nó. Pode ser acessado usando a função int retornaPesoArvore(Arv* a)
 void insereLista(Lista* l, void* a, int peso){
     Celula* novaCelula = (Celula*) calloc(1,sizeof(Celula));
 
@@ -46,20 +44,21 @@ void insereLista(Lista* l, void* a, int peso){
         l->ult = novaCelula;
     } else {
         Celula* atual = l->prim;
+        // Varre a lista até encontrar a última célula cujo peso seja menor ou igual a do objeto a ser inserido
         while (atual != NULL && atual->peso <= peso) {
             atual = atual->prox;
         }
 
-        if (atual == NULL) { // Insere no final da lista
+        if (atual == NULL) { // Caso a inserção seja no final da lista
             novaCelula->ant = l->ult;
             l->ult->prox = novaCelula;
             l->ult = novaCelula;
         } else {
-            if (atual->ant == NULL) { // Insere no início da lista
+            if (atual->ant == NULL) { // Caso a inserção seja no início da lista
                 novaCelula->prox = l->prim;
                 l->prim->ant = novaCelula;
                 l->prim = novaCelula;
-            } else { // Insere no meio da lista
+            } else { // Caso a inserção seja no meio da lista
                 novaCelula->ant = atual->ant;
                 novaCelula->prox = atual;
                 atual->ant->prox = novaCelula;
@@ -95,7 +94,7 @@ void* retiraLista(Lista* l){
     return elemento;
 }
 
-void imprimeLista(Lista* l, FuncaoImprime imprimeElemento) {
+void imprimeLista(Lista* l, void (*imprimeElemento)(void*)) {
     if (l->prim == NULL) {
         printf("Lista vazia.\n");
         return;
@@ -114,7 +113,6 @@ int ehVaziaLista(Lista* l){
     return (l->prim == NULL);
 }
 
-//diz se a lista possui apenas uma célula dentro dela
 int ehUnitariaLista(Lista* l){
     return (l->prim != NULL && l->prim == l->ult);
 }

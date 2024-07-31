@@ -22,13 +22,6 @@ int contaCaracteres(char *caminhoArquivo, int *V, int tam)
         return 0;
     }
 
-
-    // inicializa o vetor com 0
-    for (int i = 0; i < tam; i++)
-    {
-        V[i] = 0;
-    }
-
     unsigned char *charBuffer = (unsigned char *)malloc(MEGA_BYTE);
 
     while (1)
@@ -48,6 +41,8 @@ int contaCaracteres(char *caminhoArquivo, int *V, int tam)
     free(charBuffer);
     fclose(entrada);
 
+
+    // conta a quantidade de caracteres com frequência diferente de zero estao no vetor
     int qtd = 0;
 
     for (int i = 0; i < tam; i++)

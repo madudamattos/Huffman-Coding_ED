@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
     char caminhoArquivo[TAM_NOME_CAMINHO];
     strncpy(caminhoArquivo, argv[1], TAM_NOME_CAMINHO - 1);
 
-    int V[TAM_ASCII];
+    int V[TAM_ASCII] = {0};
     int qtd = contaCaracteres(caminhoArquivo, V, TAM_ASCII);
 
     Lista *l = iniciaFolhas(V, TAM_ASCII, qtd);
