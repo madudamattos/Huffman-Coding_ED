@@ -8,7 +8,7 @@
 #define TAM_NOME_CAMINHO 100
 
 // retorna a quantidade de caracteres presentes no vetor
-int contaCaracteres(char *caminhoArquivo, int *V, int tam)
+int contaCaracteres(char *caminhoArquivo, int *V, int tam, int *bytes)
 {   
     
     char caminhoEntrada[TAM_NOME_CAMINHO];
@@ -23,6 +23,7 @@ int contaCaracteres(char *caminhoArquivo, int *V, int tam)
     }
 
     unsigned char *charBuffer = (unsigned char *)malloc(MEGA_BYTE);
+    int counter = 0;
 
     while (1)
     {
@@ -35,11 +36,17 @@ int contaCaracteres(char *caminhoArquivo, int *V, int tam)
         {
             int d = (int)charBuffer[i];
             V[d]++;
+            counter++;
         }
     }
 
     free(charBuffer);
+<<<<<<< HEAD
     fclose(entrada);
+=======
+    fclose(arquivo);
+    *bytes = counter;
+>>>>>>> 07849ec65b379e6480c852d23fe32a7b984172bb
 
 
     // conta a quantidade de caracteres com frequência diferente de zero estao no vetor
@@ -70,6 +77,7 @@ void imprimeVetorFrequencia(int *V, int tam)
     printf("\n");
 }
 
+<<<<<<< HEAD
 
 // PARTE DO CODIGO DO GPT, COMPACTOU MAS NAO SEI MTO BEM OQ TA ACONTECENDO NEM SEI SE TA CERTO
 void compactaArquivo(Arv *a, bitmap** tabela, char *caminhoArquivo) {
@@ -81,12 +89,28 @@ void compactaArquivo(Arv *a, bitmap** tabela, char *caminhoArquivo) {
         return;
     }
     
+=======
+void compactaArquivo(Arv *a, FILE *arquivo, int qtd) {
+>>>>>>> 07849ec65b379e6480c852d23fe32a7b984172bb
     FILE *compactado = fopen("compactado.bin", "wb");
+    printf("Quantidade de caracteres: %d\n", qtd);
+
     escreveCabecalho(a, compactado);
 
-    int fim = -1;
-    fwrite(&fim, sizeof(int), 1, compactado);
+    //int fim = -1;
+    //fwrite(&fim, sizeof(int), 1, compactado);
 
+<<<<<<< HEAD
+=======
+    fwrite(&qtd, sizeof(int), 1, compactado);
+    bitmap *tabela[256];
+    bitmap *bm = bitmapInit(MEGA_BYTE);
+
+    criaTabela(tabela, bm, a);
+
+    //imprimeTabela(tabela);
+
+>>>>>>> 07849ec65b379e6480c852d23fe32a7b984172bb
     unsigned char *charBuffer = (unsigned char *)malloc(MEGA_BYTE);
     unsigned char bitBuffer = 0;
     int bitCount = 0;

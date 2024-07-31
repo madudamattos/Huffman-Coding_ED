@@ -125,7 +125,10 @@ Arv *leCabecalho(Arv *a, FILE *arquivo);
  * @param bm O bitmap temporário para armazenar o código.
  * @param a A árvore.
  */
+
 void criaTabela(bitmap **tabela, bitmap *bm, Arv *a);
+
+Arv *percorreArvore(Arv *a, unsigned char bit);
 
 /**
  * @brief Libera a memória alocada para a tabela de códigos.
