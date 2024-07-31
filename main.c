@@ -4,6 +4,7 @@
 #include "arvore.h"
 #include "lista.h"
 #include "compactador.h"
+#include "descompactador.h"
 #include "bitmap.h"
 
 #define TAM_NOME_CAMINHO 300
@@ -22,8 +23,9 @@ int main(int argc, char *argv[])
     char caminhoArquivo[TAM_NOME_CAMINHO];
     strncpy(caminhoArquivo, argv[1], TAM_NOME_CAMINHO - 1);
 
+    int bytes = 0;
     int V[TAM_VETOR];
-    int qtd = contaCaracteres(argv[1], V, TAM_VETOR);
+    int qtd = contaCaracteres(argv[1], V, TAM_VETOR, &bytes);
 
     //imprimeVetorFrequencia(V);
 
@@ -45,11 +47,17 @@ int main(int argc, char *argv[])
         return 0;
     }
     
-    compactaArquivo(a, arquivo);
+    compactaArquivo(a, arquivo, bytes);
 
     printf("Compactação de %s completa\n", caminhoArquivo);
 
     fclose(arquivo);
+
+    FILE *compactado = fopen("compactado.bin", "rb");
+
+    descompactaArquivo(compactado, "descompactado.txt");
+
+    fclose(compactado);
 
     return 0;
 }

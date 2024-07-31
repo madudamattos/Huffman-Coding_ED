@@ -5,3 +5,4 @@ main.o
 compactador.o
 lista.o
 compactado.bin
+descompactador.o

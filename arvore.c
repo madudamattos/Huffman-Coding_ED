@@ -96,9 +96,21 @@ int retornaPesoArvore(Arv *a)
     return a->peso;
 }
 
-int retornaTipoArvore(Arv *a)
+int ehFolhaArvore(Arv *a)
 {
-    return a->tipo;
+    return a->tipo == FOLHA;
+}
+
+Arv* percorreArvore(Arv *a, unsigned char bit)
+{
+    if (bit == 0)
+    {
+        return a->esq;
+    }
+    else
+    {
+        return a->dir;
+    }
 }
 
 Arv *organizaArvore(Lista *l)
@@ -180,19 +192,18 @@ Arv *leCabecalho(Arv *a, FILE *arquivo)
 
     fread(&nulo, sizeof(int), 1, arquivo);
 
-    if (nulo == -1)
-        return a;
-    else if (!nulo)
+    if (!nulo)
     {
         int tipo, peso;
         char caracter;
 
         fread(&tipo, sizeof(int), 1, arquivo);
+
         fread(&peso, sizeof(int), 1, arquivo);
 
         if (tipo == FOLHA)
         {
-            fread(&caracter, sizeof(char), 1, arquivo);
+            fread(&caracter, sizeof(unsigned char), 1, arquivo);
             a = arv_cria_folha(caracter, peso);
         }
         else

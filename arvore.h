@@ -24,7 +24,7 @@ char retornaCaracterArvore(Arv *a);
 
 int retornaPesoArvore(Arv *a);
 
-int retornaTipoArvore(Arv *a);
+int ehFolhaArvore(Arv *a);
 
 Arv *organizaArvore(Lista *l);
 
@@ -36,9 +36,9 @@ void escreveCabecalho(Arv *a, FILE *arquivo);
 
 Arv *leCabecalho(Arv *a, FILE *arquivo);
 
-void compactaArquivo(Arv *a, FILE *arquivo);
-
 void criaTabela(bitmap **tabela, bitmap *bm, Arv *a);
+
+Arv *percorreArvore(Arv *a, unsigned char bit);
 
 void imprimeTabela(bitmap **tabela);
 

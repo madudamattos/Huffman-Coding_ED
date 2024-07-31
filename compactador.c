@@ -8,7 +8,7 @@
 #define TAM_NOME_CAMINHO 100
 
 // retorna a quantidade de caracteres presentes no vetor
-int contaCaracteres(char *caminhoArquivo, int *V, int tam)
+int contaCaracteres(char *caminhoArquivo, int *V, int tam, int *bytes)
 {   
     char caminhoEntrada[TAM_NOME_CAMINHO];
     strcpy(caminhoEntrada, caminhoArquivo);
@@ -29,6 +29,7 @@ int contaCaracteres(char *caminhoArquivo, int *V, int tam)
     }
 
     unsigned char *charBuffer = (unsigned char *)malloc(MEGA_BYTE);
+    int counter = 0;
 
     while (1)
     {
@@ -41,11 +42,13 @@ int contaCaracteres(char *caminhoArquivo, int *V, int tam)
         {
             int d = (int)charBuffer[i];
             V[d]++;
+            counter++;
         }
     }
 
     free(charBuffer);
     fclose(arquivo);
+    *bytes = counter;
 
     int qtd = 0;
 
@@ -74,14 +77,16 @@ void imprimeVetorFrequencia(int *V, int tam)
     printf("\n");
 }
 
-// PARTE DO CODIGO DO GPT, COMPACTOU MAS NAO SEI MTO BEM OQ TA ACONTECENDO NEM SEI SE TA CERTO
-void compactaArquivo(Arv *a, FILE *arquivo) {
+void compactaArquivo(Arv *a, FILE *arquivo, int qtd) {
     FILE *compactado = fopen("compactado.bin", "wb");
+    printf("Quantidade de caracteres: %d\n", qtd);
+
     escreveCabecalho(a, compactado);
 
-    int fim = -1;
-    fwrite(&fim, sizeof(int), 1, compactado);
+    //int fim = -1;
+    //fwrite(&fim, sizeof(int), 1, compactado);
 
+    fwrite(&qtd, sizeof(int), 1, compactado);
     bitmap *tabela[256];
     bitmap *bm = bitmapInit(MEGA_BYTE);
 
