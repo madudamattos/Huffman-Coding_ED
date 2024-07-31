@@ -92,8 +92,7 @@ void compactaArquivo(Arv *a, bitmap** tabela, char *caminhoArquivo, int bytes) {
 
     escreveCabecalho(a, compactado);
 
-    //int fim = -1;
-    //fwrite(&fim, sizeof(int), 1, compactado);
+    fwrite(&bytes, sizeof(int), 1, compactado);
 
     unsigned char *charBuffer = (unsigned char *)malloc(MEGA_BYTE);
     unsigned char bitBuffer = 0;
