@@ -1,7 +1,13 @@
-#include <stdio.h>
-#include <stdlib.h>
+/*
+*
+* TAD REFERENTE AO TRABALHO DA DISCIPLINA DE ESTRUTURA DE DADOS I
+* COMPACTADOR DE HUFFMAN
+*
+* ALUNAS: BARBARA ALENCAR E MARIA EDUARDA NOIA MATTOS DE AZEVEDO
+* 
+*/
+
 #include "arvore.h"
-#include "lista.h"
 
 #define KILO_BYTE 1024
 

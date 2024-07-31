@@ -1,7 +1,12 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include "lista.h"
+/*
+* TAD REFERENTE AO TRABALHO DA DISCIPLINA DE ESTRUTURA DE DADOS I
+* COMPACTADOR DE HUFFMAN
+*
+* ALUNAS: BARBARA ALENCAR E MARIA EDUARDA NOIA MATTOS DE AZEVEDO
+*/
 
+
+#include "lista.h"
 
 struct celula{
     void* conteudo;

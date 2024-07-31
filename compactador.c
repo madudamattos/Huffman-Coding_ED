@@ -1,8 +1,14 @@
+/*
+*
+* TAD REFERENTE AO TRABALHO DA DISCIPLINA DE ESTRUTURA DE DADOS I
+* COMPACTADOR DE HUFFMAN
+*
+* ALUNAS: BARBARA ALENCAR E MARIA EDUARDA NOIA MATTOS DE AZEVEDO
+*
+*/
+
+
 #include "compactador.h"
-#include "bitmap.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
 #define MEGA_BYTE (1024 * 1024)
 #define TAM_NOME_CAMINHO 100
@@ -72,7 +78,6 @@ void imprimeVetorFrequencia(int *V, int tam)
 
     printf("\n");
 }
-
 
 void compactaArquivo(Arv *a, bitmap** tabela, char *caminhoArquivo, int bytes) {
     FILE* entrada = fopen(caminhoArquivo, "rb");
