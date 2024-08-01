@@ -11,7 +11,7 @@
 
 #define MEGA_BYTE (1024 * 1024)
 
-void descompactaArquivo(FILE *arquivo, char *caminhoSaida) {
+void descompactaArquivo(FILE *entrada, char *caminhoSaida) {
     FILE *arquivoSaida = fopen(caminhoSaida, "wb");
 
     if (!arquivoSaida) {
@@ -21,7 +21,7 @@ void descompactaArquivo(FILE *arquivo, char *caminhoSaida) {
 
     // le o tamanho do bitmap
     unsigned int bmSize;
-    if (fread(&bmSize, sizeof(unsigned int), 1, arquivo) != 1) {
+    if (fread(&bmSize, sizeof(unsigned int), 1, entrada) != 1) {
         printf("Erro ao ler o tamanho do bitmap.\n");
         fclose(arquivoSaida);
         return;
@@ -39,7 +39,7 @@ void descompactaArquivo(FILE *arquivo, char *caminhoSaida) {
     }
 
     // le o conteúdo do bitmap
-    if (fread(bmContents, sizeof(unsigned char), bmSizeInBytes, arquivo) != bmSizeInBytes) {
+    if (fread(bmContents, sizeof(unsigned char), bmSizeInBytes, entrada) != bmSizeInBytes) {
         printf("Erro ao ler o conteúdo do bitmap.\n");
         free(bmContents);
         fclose(arquivoSaida);
@@ -56,7 +56,7 @@ void descompactaArquivo(FILE *arquivo, char *caminhoSaida) {
 
     // le a arvore de volta do bitmap
     unsigned int bitIndex = 0;
-    Arv *a = leCabecalho(bm, &bitIndex);
+    Arv *a = leArvoreCabecalho(bm, &bitIndex);
 
     if (!a) {
         printf("Erro ao ler o cabeçalho\n");
@@ -67,7 +67,7 @@ void descompactaArquivo(FILE *arquivo, char *caminhoSaida) {
 
     // le o numero de bytes originais pra nao acessar o resto
     int bytes;
-    if (fread(&bytes, sizeof(int), 1, arquivo) != 1) {
+    if (fread(&bytes, sizeof(int), 1, entrada) != 1) {
         printf("Erro ao ler o número de bytes originais.\n");
         bitmapLibera(bm);
         fclose(arquivoSaida);
@@ -80,7 +80,7 @@ void descompactaArquivo(FILE *arquivo, char *caminhoSaida) {
     unsigned char bitBuffer = 0;
 
     // passa pelo arquivo bit a bit
-    while (fread(&byte, sizeof(unsigned char), 1, arquivo) == 1) {
+    while (fread(&byte, sizeof(unsigned char), 1, entrada) == 1) {
         for (int bit = 7; bit >= 0; bit--) {
             unsigned char mask = 1 << bit;
             unsigned char bitValue = (byte & mask) >> bit;

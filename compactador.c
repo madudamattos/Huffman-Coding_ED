@@ -145,7 +145,7 @@ void compactaArquivo(Arv *a, bitmap **tabela, char *caminhoArquivo, int bytes) {
     }
 
     bitmap *bm = bitmapInit(MEGA_BYTE * 10); // inicia um bitmap grande pra jogar a arvore
-    escreveCabecalho(a, bm);
+    escreveArvoreCabecalho(a, bm);
 
     unsigned int bmSize = bitmapGetLength(bm);
     fwrite(&bmSize, sizeof(unsigned int), 1, compactado); // escreve tamanho do bitmap

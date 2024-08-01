@@ -119,7 +119,7 @@ void liberaArvore(Arv* a);
  * @param a a árvore.
  * @param arquivo o arquivo onde o cabeçalho será escrito.
  */
-void escreveCabecalho(Arv *a, bitmap *bm);
+void escreveArvoreCabecalho(Arv *a, bitmap *bm);
 
 /**
  * @brief Lê o cabeçalho da árvore de um arquivo.
@@ -128,7 +128,7 @@ void escreveCabecalho(Arv *a, bitmap *bm);
  * @param arquivo a arquivo de onde o cabeçalho será lido.
  * @return a árvore lida do cabeçalho.
  */
-Arv* leCabecalho(bitmap* bm, unsigned int* index);
+Arv* leArvoreCabecalho(bitmap* bm, unsigned int* index);
 
 /**
  * @brief Cria a tabela de codificação dos caracteres a partir da árvore da árvore binária de caracteres.

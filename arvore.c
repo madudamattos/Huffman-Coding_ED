@@ -157,7 +157,7 @@ void liberaArvore(Arv* a){
     free(a);
 }
 
-void escreveCabecalho(Arv *a, bitmap *bm) {
+void escreveArvoreCabecalho(Arv *a, bitmap *bm) {
     if (!a) {
         bitmapAppendLeastSignificantBit(bm, 1); // indica que o no eh nulo entao nao escreve nada
         return;
@@ -172,11 +172,11 @@ void escreveCabecalho(Arv *a, bitmap *bm) {
         }
     }
 
-    escreveCabecalho(a->esq, bm);
-    escreveCabecalho(a->dir, bm);
+    escreveArvoreCabecalho(a->esq, bm);
+    escreveArvoreCabecalho(a->dir, bm);
 }
 
-Arv* leCabecalho(bitmap* bm, unsigned int* index) {
+Arv* leArvoreCabecalho(bitmap* bm, unsigned int* index) {
     if (bitmapGetBit(bm, *index) == 1) { //ja começa lendo o bit que indica se o no eh nulo e so continua se for valido
         *index += 1;
         return NULL;
@@ -196,8 +196,8 @@ Arv* leCabecalho(bitmap* bm, unsigned int* index) {
         }
     }
 
-    a->esq = leCabecalho(bm, index);
-    a->dir = leCabecalho(bm, index);
+    a->esq = leArvoreCabecalho(bm, index);
+    a->dir = leArvoreCabecalho(bm, index);
 
     return a;
 }
