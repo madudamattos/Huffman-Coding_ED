@@ -79,41 +79,59 @@ void imprimeVetorFrequencia(int *V, int tam)
     printf("\n");
 }
 
-void compactaArquivo(Arv *a, bitmap** tabela, char *caminhoArquivo, int bytes) {
-    FILE* entrada = fopen(caminhoArquivo, "rb");
 
-    if (!entrada)
-    {
+
+void compactaArquivo(Arv *a, bitmap **tabela, char *caminhoArquivo, int bytes) {
+    FILE *entrada = fopen(caminhoArquivo, "rb");
+
+    if (!entrada) {
         printf("Erro ao abrir o arquivo %s\n", caminhoArquivo);
         return;
     }
-    
+
     FILE *compactado = fopen("compactado.bin", "wb");
 
-    escreveCabecalho(a, compactado);
+    if (!compactado) {
+        printf("Erro ao abrir o arquivo compactado.bin\n");
+        fclose(entrada);
+        return;
+    }
 
-    fwrite(&bytes, sizeof(int), 1, compactado);
+    bitmap *bm = bitmapInit(MEGA_BYTE * 10); // iniciar um bitmap grande pra jogar a arvore
+    escreveCabecalho(a, bm);
+
+    unsigned int bmSize = bitmapGetLength(bm);
+    fwrite(&bmSize, sizeof(unsigned int), 1, compactado); // escreve tamanho do bitmap
+    fwrite(bitmapGetContents(bm), sizeof(unsigned char), (bmSize + 7) / 8, compactado); // escrever o conteudo do bitmap
+
+    fwrite(&bytes, sizeof(int), 1, compactado); // escrever o número de bytes originais
 
     unsigned char *charBuffer = (unsigned char *)malloc(MEGA_BYTE);
+    if (!charBuffer) {
+        printf("Erro ao alocar memória para o buffer de caracteres.\n");
+        bitmapLibera(bm);
+        fclose(entrada);
+        fclose(compactado);
+        return;
+    }
+
     unsigned char bitBuffer = 0;
     int bitCount = 0;
 
+    // loop que escreve os bits no arquivo compactado
     while (1) {
         size_t bytesLidos = fread(charBuffer, sizeof(unsigned char), MEGA_BYTE, entrada);
 
-        if (!bytesLidos)
+        if (bytesLidos == 0) {
             break;
+        }
 
         for (size_t i = 0; i < bytesLidos; i++) {
             unsigned char caractere = charBuffer[i];
             bitmap *caractereCompactado = tabela[(int)caractere];
 
-            //DEPURACAO
-            //printf("Caractere original: %c %d\n", caractere, (int) caractere);
-            //printf("Tamanho: %d\n", bitmapGetLength(caractereCompactado));
             for (unsigned int j = 0; j < bitmapGetLength(caractereCompactado); j++) {
                 unsigned char bit = bitmapGetBit(caractereCompactado, j);
-                //printf("%d", bit);
                 bitBuffer = (bitBuffer << 1) | bit;
                 bitCount++;
 
@@ -123,7 +141,6 @@ void compactaArquivo(Arv *a, bitmap** tabela, char *caminhoArquivo, int bytes) {
                     bitCount = 0;
                 }
             }
-            //printf("\n");
         }
     }
 
@@ -133,6 +150,8 @@ void compactaArquivo(Arv *a, bitmap** tabela, char *caminhoArquivo, int bytes) {
     }
 
     free(charBuffer);
+    bitmapLibera(bm);
     fclose(entrada);
     fclose(compactado);
 }
+

@@ -129,7 +129,7 @@ int arv_altura (Arv* a);
  * @param a A árvore.
  * @param arquivo O arquivo onde o cabeçalho será escrito.
  */
-void escreveCabecalho(Arv *a, FILE *arquivo);
+void escreveCabecalho(Arv *a, bitmap *bm);
 
 /**
  * @brief Lê o cabeçalho da árvore de um arquivo.
@@ -138,7 +138,7 @@ void escreveCabecalho(Arv *a, FILE *arquivo);
  * @param arquivo O arquivo de onde o cabeçalho será lido.
  * @return A árvore lida do cabeçalho.
  */
-Arv *leCabecalho(Arv *a, FILE *arquivo);
+Arv* leCabecalho(bitmap* bm, unsigned int* index);
 
 /**
  * @brief Cria a tabela de codificação dos caracteres a partir da árvore da árvore binária de caracteres.

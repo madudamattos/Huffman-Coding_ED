@@ -171,59 +171,51 @@ int arv_altura (Arv* a){
     }
 } 
 
-void escreveCabecalho(Arv *a, FILE *arquivo){
-    if (!a)
-    {
-        int nulo = 1;
-        fwrite(&nulo, sizeof(int), 1, arquivo);
+void escreveCabecalho(Arv *a, bitmap *bm) {
+    if (!a) {
+        bitmapAppendLeastSignificantBit(bm, 1); // indica que o no eh nulo entao nao escreve nada
         return;
-    }
-    else
-    {
-        int valido = 0;
-        fwrite(&valido, sizeof(int), 1, arquivo);
-        fwrite(&a->tipo, sizeof(int), 1, arquivo);
-        fwrite(&a->peso, sizeof(int), 1, arquivo);
+    } else {
+        bitmapAppendLeastSignificantBit(bm, 0); // indica que o no eh valido
+        bitmapAppendLeastSignificantBit(bm, a->tipo); // indica o tipo do no
 
-        if (a->tipo == 0)
-            fwrite(&a->caracter, sizeof(unsigned char), 1, arquivo);
+        if (a->tipo == FOLHA) {
+            for (int i = 0; i < 8; i++) {
+                bitmapAppendLeastSignificantBit(bm, (a->caracter >> i) & 1); // escreve o caractere se for folha
+            }
+        }
     }
 
-    escreveCabecalho(a->esq, arquivo);
-    escreveCabecalho(a->dir, arquivo);
+    escreveCabecalho(a->esq, bm);
+    escreveCabecalho(a->dir, bm);
 }
 
-Arv *leCabecalho(Arv *a, FILE *arquivo){
-    int nulo;
-
-    fread(&nulo, sizeof(int), 1, arquivo);
-
-    if (!nulo)
-    {
-        int tipo, peso;
-        char caracter;
-
-        fread(&tipo, sizeof(int), 1, arquivo);
-
-        fread(&peso, sizeof(int), 1, arquivo);
-
-        if (tipo == FOLHA)
-        {
-            fread(&caracter, sizeof(unsigned char), 1, arquivo);
-            a = arv_cria_folha(caracter, peso);
-        }
-        else
-        {
-            a = arv_cria_folha('\0', peso);
-            a->tipo = NO;
-        }
-
-        a->esq = leCabecalho(a->esq, arquivo);
-        a->dir = leCabecalho(a->dir, arquivo);
+Arv* leCabecalho(bitmap* bm, unsigned int* index) {
+    if (bitmapGetBit(bm, *index) == 1) { //ja começa lendo o bit que indica se o no eh nulo e so continua se for valido
+        *index += 1;
+        return NULL;
     }
+
+    *index += 1;
+
+    Arv *a = calloc(1, sizeof(Arv));
+    a->tipo = bitmapGetBit(bm, *index); // le o tipo do no sempre no indice passado
+    *index += 1;
+
+    if (a->tipo == FOLHA) {
+        a->caracter = 0;
+        for (int i = 0; i < 8; i++) {
+            a->caracter |= bitmapGetBit(bm, *index) << i; // le bit a bit do caractere se for folha
+            *index += 1;
+        }
+    }
+
+    a->esq = leCabecalho(bm, index);
+    a->dir = leCabecalho(bm, index);
 
     return a;
 }
+
 
 void criaTabela(bitmap **tabela, bitmap *bm, Arv *a) {
     if (!a)

@@ -12,8 +12,7 @@
 #define MEGA_BYTE 1024 * 1024
 
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
     // etapa de leitura do arquivo e criação da árvore de compactação
     if (argc < 2)
     {

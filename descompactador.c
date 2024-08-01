@@ -6,73 +6,98 @@
 
 #define MEGA_BYTE (1024 * 1024)
 
-void descompactaArquivo(FILE *arquivo, char *caminhoSaida)
-{
+void descompactaArquivo(FILE *arquivo, char *caminhoSaida) {
     FILE *arquivoSaida = fopen(caminhoSaida, "wb");
 
-    if (!arquivoSaida)
-    {
+    if (!arquivoSaida) {
         printf("Erro ao abrir o arquivo %s\n", caminhoSaida);
         return;
     }
 
-    Arv *a = leCabecalho(a, arquivo);
-
-    int qtdChar;
-    fread(&qtdChar, sizeof(int), 1, arquivo);
-
-    printf("Quantidade de caracteres: %d\n", qtdChar);
-
-    if (!a)
-    {
-        printf("Erro ao ler o cabeçalho\n");
+    // le o tamanho do bitmap
+    unsigned int bmSize;
+    if (fread(&bmSize, sizeof(unsigned int), 1, arquivo) != 1) {
+        printf("Erro ao ler o tamanho do bitmap.\n");
         fclose(arquivoSaida);
         return;
     }
 
-    unsigned char *charBuffer = (unsigned char *)malloc(MEGA_BYTE);
-    if (!charBuffer)
-    {
-        printf("Erro ao alocar memória\n");
+    // calcular o tamanho do bitmap em bytes
+    unsigned int bmSizeInBytes = (bmSize + 7) / 8;
+
+    // aqui ele cria o contents do bitmap pra jogar nele depois
+    unsigned char *bmContents = (unsigned char *)malloc(bmSizeInBytes);
+    if (!bmContents) {
+        printf("Erro ao alocar memória para o bitmap.\n");
+        fclose(arquivoSaida);
+        return;
+    }
+
+    // le o conteúdo do bitmap
+    if (fread(bmContents, sizeof(unsigned char), bmSizeInBytes, arquivo) != bmSizeInBytes) {
+        printf("Erro ao ler o conteúdo do bitmap.\n");
+        free(bmContents);
+        fclose(arquivoSaida);
+        return;
+    }
+
+    // inicializa o bitmap com o conteudo que foi lido
+    bitmap *bm = bitmapInit(bmSize);
+    for (unsigned int i = 0; i < bmSize; i++) {
+        unsigned char bit = (bmContents[i / 8] >> (7 - (i % 8))) & 0x01;
+        bitmapAppendLeastSignificantBit(bm, bit);
+    }
+    free(bmContents);
+
+    // le a arvore de volta do bitmap
+    unsigned int bitIndex = 0;
+    Arv *a = leCabecalho(bm, &bitIndex);
+
+    if (!a) {
+        printf("Erro ao ler o cabeçalho\n");
+        bitmapLibera(bm);
+        fclose(arquivoSaida);
+        return;
+    }
+
+    // le o numero de bytes originais pra nao acessar o resto
+    int bytes;
+    if (fread(&bytes, sizeof(int), 1, arquivo) != 1) {
+        printf("Erro ao ler o número de bytes originais.\n");
+        bitmapLibera(bm);
         fclose(arquivoSaida);
         return;
     }
 
     Arv *noAtual = a;
-    size_t bytesLidos;
-    int contaChar = 0;
     unsigned char byte;
-    unsigned char mask;
-    unsigned char bitValue;
+    int bytesEscritos = 0;
+    unsigned char bitBuffer = 0;
 
-    while ((bytesLidos = fread(charBuffer, sizeof(unsigned char), MEGA_BYTE, arquivo)) > 0)
-    {
-        for (size_t i = 0; i < bytesLidos; i++)
-        {
-            byte = charBuffer[i];
-            for (int bit = 7; bit >= 0; bit--)
-            {
-                if (contaChar == qtdChar)
-                    break;
+    // passa pelo arquivo bit a bit
+    while (fread(&byte, sizeof(unsigned char), 1, arquivo) == 1) {
+        for (int bit = 7; bit >= 0; bit--) {
+            unsigned char mask = 1 << bit;
+            unsigned char bitValue = (byte & mask) >> bit;
 
-                mask = 1 << bit;
-                bitValue = (byte & mask) >> bit;
+            // se escreveu todos os bytes, para
+            if (bytesEscritos == bytes)
+                break;
+            
+            // navega na arvore com base no bit
+            noAtual = percorreArvore(noAtual, bitValue);
 
-                // Navegar na árvore com base no bit
-                noAtual = percorreArvore(noAtual, bitValue);
-
-                // Se chegamos a uma folha, escrevemos o caractere no arquivo de saída
-                if (ehFolhaArvore(noAtual))
-                {
-                    unsigned char c = retornaCaracterArvore(noAtual);
-                    fwrite(&c, sizeof(unsigned char), 1, arquivoSaida);
-                    contaChar++;
-                    noAtual = a; // Retornar ao início da árvore para o próximo caractere
-                }
+            // se achou folha escreve o caractere
+            if (ehFolhaArvore(noAtual)) {
+                unsigned char c = retornaCaracterArvore(noAtual);
+                fwrite(&c, sizeof(unsigned char), 1, arquivoSaida);
+                noAtual = a; // retorna pro inicio da arvore para o próximo caractere
+                bytesEscritos++;
             }
         }
     }
 
-    free(charBuffer);
+    bitmapLibera(bm);
+    liberaArvore(a);
     fclose(arquivoSaida);
 }
