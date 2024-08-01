@@ -157,20 +157,6 @@ void liberaArvore(Arv* a){
     free(a);
 }
 
-// retorna o maior de dois inteiros. Caso a seja maior, retorna a. Caso seja menor ou igual a b, retorna b.
-static int max2 (int a, int b){
-    return (a > b) ? a : b;
-}
-
-int arv_altura (Arv* a){
-    if (!a){
-        return -1;
-    } 
-    else {
-        return 1 + max2 (arv_altura (a->esq), arv_altura(a->dir));
-    }
-} 
-
 void escreveCabecalho(Arv *a, bitmap *bm) {
     if (!a) {
         bitmapAppendLeastSignificantBit(bm, 1); // indica que o no eh nulo entao nao escreve nada
@@ -217,21 +203,21 @@ Arv* leCabecalho(bitmap* bm, unsigned int* index) {
 }
 
 
-void criaTabela(bitmap **tabela, bitmap *bm, Arv *a) {
+void criaTabelaCodificacao(bitmap **tabela, bitmap *bm, Arv *a) {
     if (!a)
         return;
 
     // entra na esquerda, insere 0 no bitmap apos encerrar recursao remove o ultimo bit
     if (a->esq) {
         bitmapAppendLeastSignificantBit(bm, 0);
-        criaTabela(tabela, bm, a->esq);
+        criaTabelaCodificacao(tabela, bm, a->esq);
         bitmapReduceLength(bm);
     }
 
     // entra na direita, insere 1 no bitmap apos encerrar recursao remove o ultimo bit
     if (a->dir) {
         bitmapAppendLeastSignificantBit(bm, 1);
-        criaTabela(tabela, bm, a->dir);
+        criaTabelaCodificacao(tabela, bm, a->dir);
         bitmapReduceLength(bm);
     }
 
@@ -258,15 +244,3 @@ void liberaTabela(bitmap **tabela, int tam) {
     }
 }
 
-
-void imprimeTabela(bitmap **tabela) {
-    for (int i = 0; i < 256; i++) {
-        if (tabela[i] != NULL) {
-            printf("tabela[%d]: ", i);
-            for (unsigned int j = 0; j < bitmapGetLength(tabela[i]); j++) {
-                printf("%d", bitmapGetBit(tabela[i], j));
-            }
-            printf("\n");
-        }
-    }
-}
