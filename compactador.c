@@ -33,6 +33,7 @@ int contaCaracteres(char *caminhoArquivo, int *V, int tam, int *bytes)
 
     while (1)
     {
+        // lê 1MB de caracteres por vez do arquivo de entrada e armazena em um buffer
         size_t bytesLidos = fread(charBuffer, sizeof(unsigned char), MEGA_BYTE, entrada);
 
         if (!bytesLidos)
@@ -65,21 +66,6 @@ int contaCaracteres(char *caminhoArquivo, int *V, int tam, int *bytes)
     return qtd;
 }
 
-void imprimeVetorFrequencia(int *V, int tam)
-{
-
-    for (int i = 0; i < tam; i++)
-    {
-        if (V[i] != 0)
-        {
-            printf("%c: %d\n", i, V[i]);
-        }
-    }
-
-    printf("\n");
-}
-
-
 
 void compactaArquivo(Arv *a, bitmap **tabela, char *caminhoArquivo, int bytes) {
     FILE *entrada = fopen(caminhoArquivo, "rb");
@@ -89,7 +75,12 @@ void compactaArquivo(Arv *a, bitmap **tabela, char *caminhoArquivo, int bytes) {
         return;
     }
 
-    FILE *compactado = fopen("compactado.bin", "wb");
+    int tamCaminho = strlen(caminhoArquivo);
+    char caminhoSaida[tamCaminho + 6];
+    strcpy(caminhoSaida, caminhoArquivo);
+    strcat(caminhoSaida, ".comp");
+
+    FILE *compactado = fopen(caminhoSaida, "wb");
 
     if (!compactado) {
         printf("Erro ao abrir o arquivo compactado.bin\n");
@@ -120,16 +111,19 @@ void compactaArquivo(Arv *a, bitmap **tabela, char *caminhoArquivo, int bytes) {
 
     // loop que escreve os bits no arquivo compactado
     while (1) {
+        // lê 1MB de caracteres por vez do arquivo de entrada e armazena em um buffer
         size_t bytesLidos = fread(charBuffer, sizeof(unsigned char), MEGA_BYTE, entrada);
 
         if (bytesLidos == 0) {
             break;
         }
 
+        // varre o buffer e busca na tabela de codificação o caractere equivalente 
         for (size_t i = 0; i < bytesLidos; i++) {
             unsigned char caractere = charBuffer[i];
             bitmap *caractereCompactado = tabela[(int)caractere];
 
+            // com o auxilio do bitmap, escreve no arquivo binario a versao compactada do caractere lido
             for (unsigned int j = 0; j < bitmapGetLength(caractereCompactado); j++) {
                 unsigned char bit = bitmapGetBit(caractereCompactado, j);
                 bitBuffer = (bitBuffer << 1) | bit;
@@ -144,6 +138,7 @@ void compactaArquivo(Arv *a, bitmap **tabela, char *caminhoArquivo, int bytes) {
         }
     }
 
+    // garante que os bits restantes no bitBuffer sejam escritos no arquivo compactado
     if (bitCount > 0) {
         bitBuffer <<= (8 - bitCount);
         fwrite(&bitBuffer, sizeof(unsigned char), 1, compactado);

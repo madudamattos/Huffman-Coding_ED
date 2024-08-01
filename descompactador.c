@@ -1,8 +1,13 @@
+/*
+*
+* TAD REFERENTE AO TRABALHO DA DISCIPLINA DE ESTRUTURA DE DADOS I
+* COMPACTADOR DE HUFFMAN
+* 
+* ALUNAS: BARBARA ALENCAR DE ARAUJO PEREIRA E MARIA EDUARDA NOIA MATTOS DE AZEVEDO
+*
+*/ 
+
 #include "descompactador.h"
-#include "bitmap.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
 #define MEGA_BYTE (1024 * 1024)
 
