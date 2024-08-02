@@ -13,7 +13,7 @@
 
 int main(int argc, char *argv[]) {
     
-    if (argc < 2){
+    if (argc < 2) {
         printf("Uso: %s <nome_arquivo>\n", argv[0]);
         return 0;
     }
@@ -28,7 +28,7 @@ int main(int argc, char *argv[]) {
 
     FILE *compactado = fopen(caminhoEntrada, "rb");
 
-    if(!compactado){
+    if(!compactado) {
         printf("Nao foi possivel abrir o arquivo compactado!\n");
         return 0;
     }

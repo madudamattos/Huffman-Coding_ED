@@ -117,15 +117,15 @@ void liberaArvore(Arv* a);
  * @brief Escreve o cabeçalho da árvore em um arquivo.
  *
  * @param a a árvore.
- * @param arquivo o arquivo onde o cabeçalho será escrito.
+ * @param bm o bitmap onde o cabeçalho será escrito.
  */
 void escreveArvoreCabecalho(Arv *a, bitmap *bm);
 
 /**
  * @brief Lê o cabeçalho da árvore de um arquivo.
  *
- * @param a a árvore.
- * @param arquivo a arquivo de onde o cabeçalho será lido.
+ * @param bm a bitmap de onde o cabeçalho será lido.
+ * @param index o índice atual do bitmap.
  * @return a árvore lida do cabeçalho.
  */
 Arv* leArvoreCabecalho(bitmap* bm, unsigned int* index);

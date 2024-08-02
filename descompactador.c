@@ -27,10 +27,10 @@ void descompactaArquivo(FILE *entrada, char *caminhoSaida) {
         return;
     }
 
-    // calcular o tamanho do bitmap em bytes
+    // calcula o tamanho do bitmap em bytes
     unsigned int bmSizeInBytes = (bmSize + 7) / 8;
 
-    // aqui ele cria o contents do bitmap pra jogar nele depois
+    // cria o contents do bitmap pra jogar nele depois
     unsigned char *bmContents = (unsigned char *)malloc(bmSizeInBytes);
     if (!bmContents) {
         printf("Erro ao alocar memória para o bitmap.\n");

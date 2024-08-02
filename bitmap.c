@@ -139,18 +139,18 @@ void bitmapAppendLeastSignificantBit(bitmap *bm, unsigned char bit)
  */
 void bitmapReduceLength(bitmap *bm)
 {
-	// verificar se bm->length>0, caso contrario, nao ha' bits para remover
+	// verifica se o tamanho eh maior que 0, caso contrario, nao ha bits para remover
 	assert(bm->length > 0, "Tamanho do mapa de bits menor ou igual a zero.");
 
-	// calcular o índice e a posição do bit a ser removido
+	// calcula o indice e a posição do bit a ser removido
 	unsigned int index = bm->length - 1;
 	unsigned int byteIndex = index / 8;
 	unsigned int bitOffset = 7 - (index % 8);
 
-	// limpar o bit correspondente
+	// limpa o bit correspondente
 	bm->contents[byteIndex] &= ~(1 << bitOffset);
 
-	// como um bit sera' removido, devemos decrementar o tamanho do mapa de bits
+	// decrementa o tamanho do bitmap
 	bm->length--;
 }
 

@@ -25,31 +25,25 @@ struct arvore {
 };
 
 
-char retornaCaracterArvore(Arv *a)
-{
+char retornaCaracterArvore(Arv *a) {
     return a->caracter;
 }
 
-int retornaPesoArvore(Arv *a)
-{
+int retornaPesoArvore(Arv *a) {
     return a->peso;
 }
 
-int ehFolhaArvore(Arv *a)
-{
+int ehFolhaArvore(Arv *a) {
     return a->tipo == FOLHA;
 }
 
-Lista *iniciaFolhas(int V[], int tam, int qtd)
-{
+Lista *iniciaFolhas(int V[], int tam, int qtd) {
     // vetor que vai armazenar todas as folhas iniciais
     Lista *lista = criaLista();
     char c;
 
-    for (int i = 0; i < tam; i++)
-    {
-        if (V[i] != 0)
-        {
+    for (int i = 0; i < tam; i++) {
+        if (V[i] != 0) {
             c = (char)i;
             Arv *a = arv_cria_folha(c, V[i]);
             insereLista(lista, a, V[i]);
@@ -59,8 +53,7 @@ Lista *iniciaFolhas(int V[], int tam, int qtd)
     return lista;
 }
 
-Arv *arv_cria_folha(char caracter, int frequencia)
-{
+Arv *arv_cria_folha(char caracter, int frequencia) {
     Arv *folha = calloc(1, sizeof(Arv));
 
     folha->caracter = caracter;
@@ -73,8 +66,7 @@ Arv *arv_cria_folha(char caracter, int frequencia)
     return folha;
 }
 
-Arv *arv_cria_no(Arv *e, Arv *d)
-{
+Arv *arv_cria_no(Arv *e, Arv *d) {
     Arv *a = calloc(1, sizeof(Arv));
 
     a->caracter = '\0';
@@ -82,15 +74,12 @@ Arv *arv_cria_no(Arv *e, Arv *d)
 
     // o peso do nó vai ser a soma do peso dos nós inferiores esquerdo e direito
     a->peso = 0;
+
     if (e != NULL)
-    {
         a->peso += e->peso;
-    }
 
     if (d != NULL)
-    {
         a->peso += d->peso;
-    }
 
     a->esq = e;
     a->dir = d;
@@ -98,9 +87,8 @@ Arv *arv_cria_no(Arv *e, Arv *d)
     return a;
 }
 
-Arv *organizaArvore(Lista *l){
-    while (!ehUnitariaLista(l))
-    {
+Arv *organizaArvore(Lista *l) {
+    while (!ehUnitariaLista(l)) {
         Arv *e = (Arv *)retiraLista(l);
         Arv *d = (Arv *)retiraLista(l);
         Arv *a = arv_cria_no(e, d);
@@ -112,45 +100,37 @@ Arv *organizaArvore(Lista *l){
     return arvore;
 }
 
-Arv* percorreArvore(Arv *a, unsigned char bit){
+Arv* percorreArvore(Arv *a, unsigned char bit) {
+    if (!a)
+        return NULL;
+    
     if (bit == 0)
-    {
         return a->esq;
-    }
     else
-    {
         return a->dir;
-    }
 }
 
-void imprimeArvore(Arv *a)
-{
+void imprimeArvore(Arv *a) {
     if (!a)
-    {
         return;
-    }
     if (a->tipo == 1)
-    {
         printf("<%d", a->peso);
-    }
     else
-    {
         printf("<%c", a->caracter);
-    }
 
     imprimeArvore(a->esq);
     imprimeArvore(a->dir);
     printf(">");
 }
 
-void imprimeNo(void *ptr)
-{
+void imprimeNo(void *ptr) {
     Arv *a = (Arv *)ptr;
     printf("%d %c %d", a->tipo, a->caracter, a->peso);
 }
 
-void liberaArvore(Arv* a){
-    if(!a) return;
+void liberaArvore(Arv* a) {
+    if(!a) 
+        return;
 
     liberaArvore(a->esq);
     liberaArvore(a->dir);
@@ -177,7 +157,7 @@ void escreveArvoreCabecalho(Arv *a, bitmap *bm) {
 }
 
 Arv* leArvoreCabecalho(bitmap* bm, unsigned int* index) {
-    if (bitmapGetBit(bm, *index) == 1) { //ja começa lendo o bit que indica se o no eh nulo e so continua se for valido
+    if (bitmapGetBit(bm, *index) == 1) { // ja começa lendo o bit que indica se o no eh nulo e so continua se for valido
         *index += 1;
         return NULL;
     }

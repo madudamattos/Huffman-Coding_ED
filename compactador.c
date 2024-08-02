@@ -14,30 +14,27 @@
 #define TAM_NOME_CAMINHO 100
 #define TAM_ASCII 256
 
-int contaFrequenciaCaracteres(char *caminhoArquivo, int *V, int tam){   
+int contaFrequenciaCaracteres(char *caminhoArquivo, int *V, int tam) {   
     char caminhoEntrada[TAM_NOME_CAMINHO];
     strcpy(caminhoEntrada, caminhoArquivo);
     
     FILE *entrada = fopen(caminhoEntrada, "rb");
 
-    if (!entrada)
-    {
+    if (!entrada) {
         printf("Erro ao abrir o arquivo %s\n", caminhoEntrada);
         return 0;
     }
 
     unsigned char *charBuffer = (unsigned char *)malloc(MEGA_BYTE);
 
-    while (1)
-    {
+    while (1) {
         // lê 1MB de caracteres por vez do arquivo de entrada e armazena em um buffer
         size_t bytesLidos = fread(charBuffer, sizeof(unsigned char), MEGA_BYTE, entrada);
 
         if (!bytesLidos)
             break;
 
-        for (size_t i = 0; i < bytesLidos; i++)
-        {
+        for (size_t i = 0; i < bytesLidos; i++) {
             int d = (int)charBuffer[i];
             V[d]++;
         }
@@ -49,10 +46,8 @@ int contaFrequenciaCaracteres(char *caminhoArquivo, int *V, int tam){
     // conta a quantidade de caracteres com frequência diferente de zero estao no vetor
     int qtd = 0;
 
-    for (int i = 0; i < tam; i++)
-    {
-        if (V[i] != 0)
-        {
+    for (int i = 0; i < tam; i++) {
+        if (V[i] != 0) {
             qtd++;
         }
     }
@@ -60,13 +55,13 @@ int contaFrequenciaCaracteres(char *caminhoArquivo, int *V, int tam){
     return qtd;
 }
 
-int contaCaracteresTotal(char *caminhoArquivo){
+int contaCaracteresTotal(char *caminhoArquivo) {
     char caminhoEntrada[TAM_NOME_CAMINHO];
     strcpy(caminhoEntrada, caminhoArquivo);
     
     FILE *entrada = fopen(caminhoEntrada, "rb");
 
-    if (!entrada){
+    if (!entrada) {
         printf("Erro ao abrir o arquivo %s\n", caminhoEntrada);
         return 0;
     }
@@ -74,8 +69,8 @@ int contaCaracteresTotal(char *caminhoArquivo){
     int counter = 0;
     unsigned char *charBuffer = (unsigned char *)malloc(MEGA_BYTE);
 
-    while (1){
-        // lê 1MB de caracteres por vez do arquivo de entrada e armazena em um buffer
+    while (1) {
+        // le 1MB de caracteres por vez do arquivo de entrada e armazena em um buffer
         size_t bytesLidos = fread(charBuffer, sizeof(unsigned char), MEGA_BYTE, entrada);
 
         if (!bytesLidos)
@@ -92,7 +87,7 @@ int contaCaracteresTotal(char *caminhoArquivo){
     return counter;
 }
 
-Arv* criaArvoreCompactacao(char* caminhoEntrada){
+Arv* criaArvoreCompactacao(char* caminhoEntrada) {
     char caminhoArquivo[TAM_NOME_CAMINHO];
     strncpy(caminhoArquivo, caminhoEntrada, TAM_NOME_CAMINHO - 1);
 
@@ -108,11 +103,11 @@ Arv* criaArvoreCompactacao(char* caminhoEntrada){
     return a;
 }
 
-bitmap** iniciaTabelaCodificacao(Arv* a){
+bitmap** iniciaTabelaCodificacao(Arv* a) {
     bitmap **tabela = malloc(TAM_ASCII * sizeof(bitmap*)); 
     bitmap *bm = bitmapInit(MEGA_BYTE);
 
-    for(int i=0; i< TAM_ASCII; i++){
+    for(int i=0; i< TAM_ASCII; i++) {
         tabela[i] = NULL;
     }
 
@@ -149,9 +144,9 @@ void compactaArquivo(Arv *a, bitmap **tabela, char *caminhoArquivo, int bytes) {
 
     unsigned int bmSize = bitmapGetLength(bm);
     fwrite(&bmSize, sizeof(unsigned int), 1, compactado); // escreve tamanho do bitmap
-    fwrite(bitmapGetContents(bm), sizeof(unsigned char), (bmSize + 7) / 8, compactado); // escrever o conteudo do bitmap
+    fwrite(bitmapGetContents(bm), sizeof(unsigned char), (bmSize + 7) / 8, compactado); // escreve o conteudo do bitmap
 
-    fwrite(&bytes, sizeof(int), 1, compactado); // escrever o número de bytes originais
+    fwrite(&bytes, sizeof(int), 1, compactado); // escreve o numero de bytes originais
 
     unsigned char *charBuffer = (unsigned char *)malloc(MEGA_BYTE);
     if (!charBuffer) {
@@ -167,19 +162,19 @@ void compactaArquivo(Arv *a, bitmap **tabela, char *caminhoArquivo, int bytes) {
 
     // loop que escreve os bits no arquivo compactado
     while (1) {
-        // lê 1MB de caracteres por vez do arquivo de entrada e armazena em um buffer
+        // le 1MB de caracteres por vez do arquivo de entrada e armazena em um buffer
         size_t bytesLidos = fread(charBuffer, sizeof(unsigned char), MEGA_BYTE, entrada);
 
         if (bytesLidos == 0) {
             break;
         }
 
-        // varre o buffer e busca na tabela de codificação o caractere equivalente 
+        // varre o buffer e busca o caractere na tabela de codificacao
         for (size_t i = 0; i < bytesLidos; i++) {
             unsigned char caractere = charBuffer[i];
             bitmap *caractereCompactado = tabela[(int)caractere];
 
-            // com o auxilio do bitmap, escreve no arquivo binario a versao compactada do caractere lido
+            // escreve no arquivo binario a versao compactada do caractere
             for (unsigned int j = 0; j < bitmapGetLength(caractereCompactado); j++) {
                 unsigned char bit = bitmapGetBit(caractereCompactado, j);
                 bitBuffer = (bitBuffer << 1) | bit;
