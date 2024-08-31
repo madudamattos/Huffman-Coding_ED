@@ -14,16 +14,16 @@ To build the project, use the `make` command. This will generate two programs: `
 
 The compressor and decompressor can handle various file types, including `txt`, `png`, `pdf`, etc.
 
-To compress a file, use the command `./compacta path-to-file/file-name`. For example:
-`./compacta arquivosEntrada/biblia.txt`
+- To compress a file, use the command `./compacta path-to-file/file-name`. 
+  For example: `./compacta arquivosEntrada/biblia.txt`
 
-To decompress a file, use the command `./descompacta path-to-file/file-name`. For example:
-`./descompacta arquivosEntrada/biblia.txt.huff`
+- To decompress a file, use the command `./descompacta path-to-file/file-name`.
+  For example: `./descompacta arquivosEntrada/biblia.txt.huff`
 
 ## Verification
 Check the size of the input files and the size of the compressed file to see the magic of Huffman encoding in action!
 
-***
+
 
 Feel free to reach out if you have any questions or issues with the project.
 
