@@ -4,6 +4,9 @@ Welcome to the Huffman Compressor/Decompressor project! This repository contains
 
 ## Documentation
 
+The detailed instructions for this assignment are available in the file `ed-trabalho2.pdf` and the huffman algorithm is explained in details in `HuffmanExplicacao.pdf`.
+
+
 All code documentation can be found in the file `COMPACTADOR DE HUFFMAN.pdf`.
 
 ## Build Instructions
