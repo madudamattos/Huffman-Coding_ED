@@ -1,4 +1,4 @@
-# Huffman Compressor/Decompressor
+# Huffman Encoder/Decoder
 
 Welcome to the Huffman Compressor/Decompressor project! This repository contains the implementation of a Huffman encoding and decoding tool in C for the Data Structures I course.
 
@@ -23,7 +23,7 @@ To decompress a file, use the command `./descompacta path-to-file/file-name`. Fo
 ## Verification
 Check the size of the input files and the size of the compressed file to see the magic of Huffman encoding in action!
 
----
+***
 
 Feel free to reach out if you have any questions or issues with the project.
 
