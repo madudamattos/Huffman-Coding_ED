@@ -1,4 +1,4 @@
-# Huffman Encoder/Decoder
+# Huffman Compressor/Decompressor
 
 Welcome to the Huffman Compressor/Decompressor project! This repository contains the implementation of a Huffman encoding and decoding tool in C for the Data Structures I course.
 
